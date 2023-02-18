@@ -1,0 +1,16 @@
+export default [
+  {type: 1, name: 'Digital Art'},
+  {type: 2, name: '3D project'},
+  {type: 3, name: 'Source code'},
+  {type: 4, name: 'Article'},
+  {type: 5, name: 'Architecture'},
+  {type: 6, name: 'Music'},
+  {type: 7, name: 'Logo'},
+  // 'Digital Art',
+  // '3D project',
+  // 'Source code',
+  // 'Article',
+  // 'Architecture',
+  // 'Music',
+  // 'Logo',
+];
