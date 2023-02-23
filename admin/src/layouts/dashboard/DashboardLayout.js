@@ -36,7 +36,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated && !localStorage.getItem("token")) {
+    if (!isAuthenticated) {
       navigate("/auth");
     }
   }, [isAuthenticated, navigate]);

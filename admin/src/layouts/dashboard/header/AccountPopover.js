@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { alpha } from "@mui/material/styles";
 import {
   Box,
@@ -17,10 +18,12 @@ const MENU_OPTIONS = [
   {
     label: "Home",
     icon: "eva:home-fill",
+    path: "/dashboard",
   },
   {
     label: "Profile",
     icon: "eva:person-fill",
+    path: "/dashboard/user",
   },
   {
     label: "Settings",
@@ -29,6 +32,7 @@ const MENU_OPTIONS = [
 ];
 
 export default function AccountPopover() {
+  const navigation = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector(state);
   const [open, setOpen] = useState(null);
@@ -37,7 +41,8 @@ export default function AccountPopover() {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleMenuClick = (path) => {
+    navigation(path);
     setOpen(null);
   };
 
@@ -66,7 +71,7 @@ export default function AccountPopover() {
       <Popover
         open={Boolean(open)}
         anchorEl={open}
-        onClose={handleClose}
+        onClose={() => setOpen(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
@@ -95,7 +100,10 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
+            <MenuItem
+              key={option.label}
+              onClick={() => handleMenuClick(option.path)}
+            >
               {option.label}
             </MenuItem>
           ))}
