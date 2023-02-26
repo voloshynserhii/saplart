@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
       clearImage(doc.path);
       return Document.findByIdAndRemove(doc);
     })
-    .then((result) => {
+    .then(() => {
       res.status(200).json({});
     })
     .catch((err) => {

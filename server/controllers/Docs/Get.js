@@ -16,6 +16,7 @@ module.exports = async (req, res, next) => {
       totalItems = count;
       return Document.find(query)
         .select({
+          _id: 1,
           title: 1,
           description: 1,
           tags: 1,
@@ -23,7 +24,8 @@ module.exports = async (req, res, next) => {
           history: 1,
           isPublished: 1,
           publishedAt: 1,
-          updatedAt: 1
+          updatedAt: 1,
+          inFavorites: 1
         })
         .populate("history")
         .skip((currentPage - 1) * perPage)

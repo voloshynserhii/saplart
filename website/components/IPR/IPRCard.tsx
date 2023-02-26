@@ -1,29 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
+import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
+import {
+  Avatar,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Collapse,
+  Typography,
+} from "@mui/material";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {
+  Favorite as FavoriteIcon,
+  Share as ShareIcon,
+  ExpandMore as ExpandMoreIcon,
+} from "@mui/icons-material/";
+import { docs } from "../../api";
+import { setUser } from "../../store/reducers/auth";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
-
-const url =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8080"
-    : process.env.PUBLIC_URL;
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
@@ -36,10 +37,22 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function IPRCard({ item }) {
+export default function IPRCard({ item, user }) {
+  const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const { _id, title, description, path, publishedAt } = item;
+
+  useEffect(() => {
+    setFavorite(user?.favorites?.includes(_id));
+  }, [user]);
+
+  const handleAddToFavorites = async () => {
+    const response = await docs.addToFavorites(_id, user._id);
+    if (response.user) {
+      dispatch(setUser(response.user));
+    }
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -65,18 +78,25 @@ export default function IPRCard({ item }) {
       <CardMedia
         component="img"
         height="250px"
-        image={`${url}/${path}`}
+        image={`${process.env.NEXT_PUBLIC_URL}/${path}`}
         alt={title}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {description}
+          {description.length > 40
+            ? `${description.slice(0, 40)}...`
+            : description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon color={favorite ? "error" : "action"} onClick={() => setFavorite(prev => !prev)} />
-        </IconButton>
+        {user && (
+          <IconButton
+            aria-label="add to favorites"
+            onClick={handleAddToFavorites}
+          >
+            <FavoriteIcon color={favorite ? "error" : "action"} />
+          </IconButton>
+        )}
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>

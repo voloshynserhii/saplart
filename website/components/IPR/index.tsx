@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { List, Grid } from "@mui/material";
 import IPRCard from "./IPRCard";
-
-const url =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8080"
-    : process.env.PUBLIC_URL;
+import { state } from "../../store/reducers/auth";
 
 async function getServerSideProps() {
-  const response = await axios.get(`${url}/feed/docs`, {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/feed/docs`, {
     params: {
       isPublished: true,
     },
@@ -18,6 +15,7 @@ async function getServerSideProps() {
 }
 
 const IPRList = () => {
+  const { user } = useSelector(state);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -44,9 +42,9 @@ const IPRList = () => {
     >
       <Grid container spacing={3}>
         {data?.length ? (
-          data.map(({ _id, ...item }) => (
-            <Grid item xs={12} md={6} lg={4} key={_id}>
-              <IPRCard item={item} />
+          data.map((item) => (
+            <Grid item xs={12} md={6} lg={4} key={item._id}>
+              <IPRCard item={item} user={user} />
             </Grid>
           ))
         ) : (

@@ -25,6 +25,7 @@ const documentSchema = new Schema(
     history: [{ type: Schema.Types.ObjectId, ref: "Log" }],
     isPublished: { type: Boolean, default: false },
     publishedAt: Date,
+    inFavorites: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

@@ -1,7 +1,4 @@
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-
+import { Box, Typography } from "@mui/material";
 import IPRList from "../components/IPR";
 
 export default function Home() {

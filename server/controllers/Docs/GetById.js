@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   const userId = req.query.userId;
 
   Document.findOne({ _id: docId, creator: userId })
-    .select({ title: 1, description: 1, tags: 1, path: 1, history: 1, isPublished: 1 })
+    .select({ _id: 1, title: 1, description: 1, tags: 1, path: 1, history: 1, isPublished: 1 })
     .populate('history')
     .then((doc) => {
       if (!doc) {

@@ -19,6 +19,10 @@ router.put(
   // isAuth,
   Docs.Update
 );
+router.post(
+  '/doc/like/:docId',
+  Docs.AddToFavorites
+);
 
 router.delete('/doc/:docId', /*isAuth*/ Docs.Delete);
 

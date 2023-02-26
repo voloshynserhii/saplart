@@ -4,4 +4,5 @@ module.exports = {
     GetById: require('./GetById'),
     Update: require('./Update'),
     Delete: require('./Delete'),
+    AddToFavorites: require('./AddToFavorites')
 }

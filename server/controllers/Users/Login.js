@@ -16,6 +16,7 @@ module.exports = async (req, res, next) => {
       loadedUser._id = user._id;
       loadedUser.name = user.name;
       loadedUser.email = user.email;
+      loadedUser.favorites = user.favorites;
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {

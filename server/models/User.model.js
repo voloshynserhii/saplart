@@ -14,16 +14,13 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  // status: {
-  //   type: String,
-  //   default: 'owner'
-  // },
-  // documents: [
-  //   {
-  //     type: Schema.Types.ObjectId,
-  //     ref: 'Document'
-  //   }
-  // ]
+  isCreator: {
+    type: Boolean,
+    default: false
+  },
+  favorites: [
+    { type: Schema.Types.ObjectId, ref: "Document" }
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);

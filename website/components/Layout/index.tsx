@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
   Container,
@@ -13,17 +15,32 @@ import {
 } from "@mui/material";
 
 import Menu from "./Menu";
+import { state, setUser, logOut } from "../../store/reducers/auth";
 
 export default function Layout({ children }) {
+  const { user } = useSelector(state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (!!user) {
+      dispatch(setUser(JSON.parse(user)));
+    }
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(logOut());
+  };
+
   const drawerWidth = 240;
   return (
     <Container maxWidth="lg">
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Menu />
+          <Menu user={user} onLogout={handleLogout} />
         </Grid>
         {/* <Grid item md={2}> */}
-          {/* 
+        {/* 
                     <Drawer
             variant="permanent"
             sx={{
