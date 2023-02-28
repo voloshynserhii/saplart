@@ -6,7 +6,8 @@ import IPRCard from "./IPRCard";
 import { state } from "../../store/reducers/auth";
 
 async function getServerSideProps() {
-  const response = await axios.get(`${process.env.NEXT_SERVER_URL}/feed/docs`, {
+  console.log(process.env.SERVER_URL)
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/feed/docs`, {
     params: {
       isPublished: true,
     },

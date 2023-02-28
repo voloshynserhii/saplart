@@ -2,7 +2,7 @@ import axios from "axios";
 
 const login = async (query) => {
   try {
-    const response = await axios.post(`${process.env.NEXT_SERVER_URL}/auth/login`, query);
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`, query);
 
     if (response.status === 200) {
       localStorage.setItem('token', response.data.token);

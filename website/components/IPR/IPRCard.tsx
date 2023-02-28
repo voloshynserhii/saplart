@@ -78,7 +78,7 @@ export default function IPRCard({ item, user }) {
       <CardMedia
         component="img"
         height="250px"
-        image={`${process.env.NEXT_SERVER_URL}/${path}`}
+        image={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`}
         alt={title}
       />
       <CardContent>
