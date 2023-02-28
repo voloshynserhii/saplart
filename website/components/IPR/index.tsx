@@ -1,25 +1,29 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { List, Grid } from "@mui/material";
+import { Box, CircularProgress, List, Grid } from "@mui/material";
 import IPRCard from "./IPRCard";
 import { state } from "../../store/reducers/auth";
 
 async function getServerSideProps() {
-  console.log(process.env.SERVER_URL)
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/feed/docs`, {
-    params: {
-      isPublished: true,
-    },
-  });
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/feed/docs`,
+    {
+      params: {
+        isPublished: true,
+      },
+    }
+  );
   return { response };
 }
 
 const IPRList = () => {
   const { user } = useSelector(state);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     getData();
   }, []);
 
@@ -28,7 +32,23 @@ const IPRList = () => {
     if (props) {
       setData(props.response?.data?.docs);
     }
+    setLoading(false);
   };
+
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          height: "50vh",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <List
@@ -49,7 +69,17 @@ const IPRList = () => {
             </Grid>
           ))
         ) : (
-          <div>NO DATA</div>
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              height: "50vh",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            NO DATA
+          </Box>
         )}
       </Grid>
     </List>
