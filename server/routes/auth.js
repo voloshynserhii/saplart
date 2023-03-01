@@ -20,7 +20,6 @@ router.put(
         });
       })
       .normalizeEmail(),
-    body("password").trim().isLength({ min: 5 }),
   ],
   Users.Signup
 );

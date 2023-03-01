@@ -17,11 +17,10 @@ import { url } from "../../../utils/consts";
 
 const StyledCardMedia = styled("div")({
   position: "relative",
-  paddingTop: "calc(100% * 3 / 4)",
+  paddingTop: "50%",
 });
 
 const StyledTitle = styled(Link)({
-  height: 44,
   overflow: "hidden",
   WebkitLineClamp: 2,
   display: "-webkit-box",
@@ -41,7 +40,6 @@ const StyledInfo = styled("div")(({ theme }) => ({
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "flex-end",
-  marginTop: theme.spacing(3),
   color: theme.palette.text.disabled,
 }));
 
@@ -49,7 +47,7 @@ const StyledCover = styled("img")({
   top: 0,
   width: "100%",
   height: "100%",
-  objectFit: "cover",
+  // objectFit: "cover",
   position: "absolute",
 });
 
@@ -58,9 +56,10 @@ export default function BlogPostCard({ event }) {
 
   let actionText;
   if (action === "documentUpdate") actionText = "Document was updated";
-  
+  if (action === "documentCreate") actionText = "Document was created";
+
   return (
-    <Grid item xs={16} md={6}>
+    <Grid item xs={12} md={4}>
       <Card sx={{ position: "relative" }}>
         <StyledCardMedia>
           <SvgColor
@@ -77,7 +76,11 @@ export default function BlogPostCard({ event }) {
           />
           <StyledAvatar alt={creator.name} src={creator.avatarUrl || ""} />
 
-          <StyledCover alt={title} src={`${url}/${path}`} />
+          <StyledCover
+            alt={title}
+            src={`${url}/${path}`}
+            onError={(e) => (e.currentTarget.src = "/assets/no-image.png")}
+          />
         </StyledCardMedia>
 
         <CardContent>
