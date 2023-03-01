@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        return res.status(401).json('A user with this email could not be found')
+        return null
       }
       loadedUser._id = user._id;
       loadedUser.name = user.name;
@@ -19,6 +19,9 @@ module.exports = async (req, res, next) => {
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {
+      if(isEqual === null) {
+        return res.status(401).json('A user with this email could not be found')
+      }
       if (!isEqual) {
         return res.status(401).json('Wrong password!')
       }

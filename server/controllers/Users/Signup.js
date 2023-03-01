@@ -8,8 +8,15 @@ module.exports = async (req, res, next) => {
   const name = req.body.name || '';
   const password = req.body.password;
   
-  if (!email || !password) {
-    return res.status(422).json("Provide email and password!");
+  const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+  const validEmail = emailRegexp.test(email)
+  if (!validEmail) {
+    return res.status(422).json("Provide valid email!");
+  }
+  
+  if (!password || password.length < 4) {
+    return res.status(422).json("Password must be at least 4 characters!");
   }
   
   bcrypt

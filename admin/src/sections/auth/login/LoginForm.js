@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-// @mui
 import {
   Link,
   Stack,
@@ -10,11 +9,9 @@ import {
   Checkbox,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-// components
+
 import Iconify from "../../../components/iconify";
 import { login } from "../../../store/reducers/auth";
-
-// ----------------------------------------------------------------------
 
 export default function LoginForm(props) {
   const dispatch = useDispatch();
@@ -22,9 +19,10 @@ export default function LoginForm(props) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     props.onLoading(true);
-    dispatch(login({ email, password }));
+    await dispatch(login({ email, password }));
+    props.onLoading(false);
   };
 
   return (

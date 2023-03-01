@@ -12,9 +12,9 @@ import { clearDocErrors, state as docState } from "./store/reducers/documents";
 
 export default function App() {
   const dispatch = useDispatch();
-  const authErrors = useSelector(state)?.errors;
-  const docErrors = useSelector(docState).errors;
-  const [hasErrors, setHasErrors] = useState('');
+  const authError = useSelector(state)?.error;
+  const docError = useSelector(docState).error;
+  const [hasErrors, setHasErrors] = useState("");
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -23,17 +23,19 @@ export default function App() {
       dispatch(setUser(JSON.parse(user)));
     }
   }, [dispatch]);
-  
+
   useEffect(() => {
-    if(authErrors?.length) setHasErrors('auth');
-    if(docErrors?.length) setHasErrors('doc');
-  }, [authErrors, docErrors])
+    if (!!authError) setHasErrors("auth");
+    if (!!docError) setHasErrors("doc");
+  }, [authError, docError]);
 
   useEffect(() => {
     let timeId;
     if (!!hasErrors) {
       timeId = setTimeout(() => {
-        hasErrors === 'auth' ? dispatch(clearAuthErrors()) : dispatch(clearDocErrors());
+        hasErrors === "auth"
+          ? dispatch(clearAuthErrors())
+          : dispatch(clearDocErrors());
       }, 3000);
     }
 
@@ -42,17 +44,17 @@ export default function App() {
     };
   }, [hasErrors]);
 
-  const errors = [...authErrors, ...docErrors];
-  
   return (
     <GoogleOAuthProvider clientId="AIzaSyCy-vYXvI3-u0tzssd7Bn_5t5KtGjGAEns">
       <ThemeProvider>
-        {errors &&
-          errors?.map((err) => (
-            <Alert key={err?.msg} severity="error" sx={{ mb: 2 }}>
-              {`${err?.msg} ${err?.param || ""}`}
-            </Alert>
-          ))}
+        {authError && (
+          <Alert
+            severity="error"
+            sx={{ position: "absolute", top: "5%", right: "0", width: "50%" }}
+          >
+            {authError}
+          </Alert>
+        )}
         <ScrollToTop />
         <StyledChart />
         <Router />

@@ -44,19 +44,18 @@ export const authSlice = createSlice({
           state.user = action.payload.user;
           state.isAuthenticated = true;
         }
-        if (action.payload.message) {
-          state.error = action.payload.message;
-          state.errors = action.payload.data;
+        if (action.payload.status === 422) {
+          state.error = action.payload.data;
         }
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log(action.payload)
         if (action.payload.user) {
           state.user = action.payload.user;
           state.isAuthenticated = true;
         }
-        if (action.payload.message) {
-          state.error = action.payload.message;
-          state.errors = [{ msg: action.payload.message }];
+        if (action.payload.status === 401) {
+          state.error = action.payload.data;
         }
       });
   },

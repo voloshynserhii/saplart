@@ -57,7 +57,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const mdUp = useResponsive("up", "md");
-
+console.log(error)
   useEffect(() => {
     if (!!user) {
       setLoading(false);

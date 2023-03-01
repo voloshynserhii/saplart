@@ -11,7 +11,7 @@ const login = async (query) => {
       return response.data
     }
   } catch (err) {
-    return err.response.data
+    return err.response
   }
 };
 export default login;
