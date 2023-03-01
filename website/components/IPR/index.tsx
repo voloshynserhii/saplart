@@ -19,11 +19,10 @@ async function getServerSideProps() {
 
 const IPRList = () => {
   const { user } = useSelector(state);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
     getData();
   }, []);
 

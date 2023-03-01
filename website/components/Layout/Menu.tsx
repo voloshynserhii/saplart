@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import {
   AppBar,
   Badge,
@@ -10,13 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import {
-  AccountCircle,
-  Favorite,
-  Mail,
-  More,
-  Notifications,
-} from "@mui/icons-material";
+import { AccountCircle, Favorite, Login, More } from "@mui/icons-material";
 
 export default function PrimarySearchAppBar({ user, onLogout }) {
   const router = useRouter();
@@ -33,8 +27,8 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
 
   const handleLogout = () => {
     onLogout();
-  }
-  
+  };
+
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -87,37 +81,38 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <Mail />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <Notifications />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
+        {user && (
+          <>
+            <IconButton
+              size="large"
+              aria-label="show favorites"
+              color="inherit"
+            >
+              <Badge badgeContent={user.favorites?.length} color="error">
+                <Favorite />
+              </Badge>
+            </IconButton>
+
+            <p>Favorites</p>
+          </>
+        )}
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => (!user ? router.push("/auth") : alert("Not implemented yet"))}
+      >
         <IconButton
           size="large"
+          edge="end"
           aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
+          aria-controls={menuId}
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          {user ? <AccountCircle /> : <Login />}
         </IconButton>
-        <p>Profile</p>
+        <p>{user ? "Profile" : "Log In"}</p>
       </MenuItem>
     </Menu>
   );
@@ -139,16 +134,18 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {user && <IconButton
-              size="large"
-              aria-label="show favorites"
-              color="inherit"
-            >
-              <Badge badgeContent={user.favorites?.length} color="error">
-                <Favorite />
-              </Badge>
-            </IconButton>}
-            
+            {user && (
+              <IconButton
+                size="large"
+                aria-label="show favorites"
+                color="inherit"
+              >
+                <Badge badgeContent={user.favorites?.length} color="error">
+                  <Favorite />
+                </Badge>
+              </IconButton>
+            )}
+
             {user ? (
               <IconButton
                 size="large"
@@ -166,8 +163,15 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
                 variant="body1"
                 noWrap
                 component="div"
-                sx={{ display: { xs: "none", sm: "block", alignSelf: 'center' } }}
-                onClick={() => router.push('/auth')}
+                sx={{
+                  display: {
+                    xs: "none",
+                    sm: "block",
+                    alignSelf: "center",
+                    cursor: "pointer",
+                  },
+                }}
+                onClick={() => router.push("/auth")}
               >
                 Log In
               </Typography>
