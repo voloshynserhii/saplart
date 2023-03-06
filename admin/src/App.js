@@ -42,7 +42,7 @@ export default function App() {
     return () => {
       clearTimeout(timeId);
     };
-  }, [hasErrors]);
+  }, [hasErrors, dispatch]);
 
   return (
     <GoogleOAuthProvider clientId="AIzaSyCy-vYXvI3-u0tzssd7Bn_5t5KtGjGAEns">

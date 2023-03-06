@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Grid, Container, Stack, Typography } from "@mui/material";
+import { Avatar, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Grid, Container, Stack, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  BlogPostCard,
+  // BlogPostCard,
   BlogPostsSort,
   BlogPostsSearch,
 } from "../sections/@dashboard/blog";
@@ -18,7 +18,7 @@ const SORT_OPTIONS = [
   { value: "oldest", label: "Oldest" },
 ];
 
-export default function BlogPage() {
+export default function NewsPage() {
   const dispatch = useDispatch();
   const { news } = useSelector(state);
   
@@ -55,9 +55,36 @@ export default function BlogPage() {
         </Stack>
 
         <Grid container spacing={3}>
-          {news?.map(event => (
+          
+        <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
+      {news.map((event) => {
+
+        return (
+          <ListItem
+            key={event._id}
+            secondaryAction={
+              <div>View</div>
+            }
+            // disablePadding
+          >
+            <ListItemButton>
+              <ListItemAvatar>
+                <Avatar
+                  alt={event.creator?.name}
+                  // src={`/static/images/avatar/${value + 1}.jpg`}
+                />
+              </ListItemAvatar>
+              <ListItemText id={event._id} primary={event.title} />
+            </ListItemButton>
+          </ListItem>
+        );
+      })}
+    </List>
+          
+          
+          {/* {news?.map(event => (
             <BlogPostCard key={event._id} event={event} />
-          ))}
+          ))} */}
         </Grid>
       </Container>
     </>

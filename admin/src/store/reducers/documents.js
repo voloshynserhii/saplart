@@ -6,7 +6,6 @@ const initialState = {
   totalDocs: 0,
   current: null,
   error: "",
-  errors: [],
   news: []
 };
 
@@ -47,7 +46,6 @@ export const docSlice = createSlice({
       state.error = "";
     },
     clearDocErrors: (state, action) => {
-      state.errors = [];
       state.error = "";
     },
   },
@@ -79,13 +77,11 @@ export const docSlice = createSlice({
         }
         if (!action.payload.docs && action.payload.message) {
           state.error = action.payload.message;
-          // state.errors = action.payload.data;
         }
       })
       .addCase(updateDoc.fulfilled, (state, action) => {
         if (action.payload.message) {
           state.error = action.payload.message;
-          // state.errors = action.payload.data;
         }
         if (action.payload.doc) {
           const filteredDocs = state.documents.filter(
@@ -98,7 +94,6 @@ export const docSlice = createSlice({
       .addCase(deleteDoc.fulfilled, (state, action) => {
         if (action.payload.message) {
           state.error = action.payload.message;
-          // state.errors = action.payload.data;
         }
         if (action.payload) {
           state.current = null;
@@ -106,8 +101,8 @@ export const docSlice = createSlice({
         }
       })
       .addCase(getHistory.fulfilled, (state, action) => {
-        if(action.payload.logs) {
-          state.news = action.payload.logs
+        if(action.payload.docs) {
+          state.news = action.payload.docs
         }
       })
   },

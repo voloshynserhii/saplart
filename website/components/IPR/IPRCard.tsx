@@ -4,12 +4,14 @@ import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import {
   Avatar,
+  Badge,
   Card,
   CardHeader,
   CardMedia,
   CardContent,
   CardActions,
   Collapse,
+  Rating,
   Typography,
 } from "@mui/material";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
@@ -41,7 +43,7 @@ export default function IPRCard({ item, user }) {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
-  const { _id, title, description, path, publishedAt } = item;
+  const { _id, title, description, path, inFavorites, publishedAt } = item;
 
   useEffect(() => {
     setFavorite(user?.favorites?.includes(_id));
@@ -67,11 +69,23 @@ export default function IPRCard({ item, user }) {
             R
           </Avatar>
         }
-        // action={
-        //   <IconButton aria-label="settings">
-        //     <MoreVertIcon />
-        //   </IconButton>
-        // }
+        action={
+          <>
+            <IconButton aria-label="share">
+              <ShareIcon />
+            </IconButton>
+            {user && (
+              <IconButton
+                aria-label="add to favorites"
+                onClick={handleAddToFavorites}
+              >
+                <Badge badgeContent={inFavorites?.length || 0} color="primary">
+                  <FavoriteIcon color={favorite ? "error" : "action"} />
+                </Badge>
+              </IconButton>
+            )}
+          </>
+        }
         title={title}
         subheader={publishedAt ? date : ""}
       />
@@ -89,17 +103,14 @@ export default function IPRCard({ item, user }) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        {user && (
-          <IconButton
-            aria-label="add to favorites"
-            onClick={handleAddToFavorites}
-          >
-            <FavoriteIcon color={favorite ? "error" : "action"} />
-          </IconButton>
-        )}
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
+        <Rating
+          name="simple-controlled"
+          value={5}
+          precision={0.5}
+          // onChange={(event, newValue) => {
+          //   setValue(newValue);
+          // }}
+        />
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
