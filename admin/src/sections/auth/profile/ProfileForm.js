@@ -61,7 +61,7 @@ export default function ProfileForm({ user, onUpdate }) {
           type="password"
           onChange={(event) => setOldPassword(event.currentTarget.value)}
         />
-        
+
         <TextField
           name="password"
           label="New Password"
@@ -85,6 +85,7 @@ export default function ProfileForm({ user, onUpdate }) {
       </Stack>
 
       <LoadingButton
+        sx={{ my: 3 }}
         size="large"
         type="submit"
         variant="contained"

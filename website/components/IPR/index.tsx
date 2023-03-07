@@ -63,7 +63,7 @@ const IPRList = () => {
       <Grid container spacing={3}>
         {data?.length ? (
           data.map((item) => (
-            <Grid item xs={12} md={6} lg={4} key={item._id}>
+            <Grid item xs={12} md={6} key={item._id}>
               <IPRCard item={item} user={user} />
             </Grid>
           ))

@@ -20,12 +20,14 @@ import Dialog from "../components/dialog";
 import Iconify from "../components/iconify";
 import DocumentCard from "../sections/@dashboard/products/DocumentCard";
 import { state, deleteDoc } from "../store/reducers/documents";
+import { state as authState } from "../store/reducers/auth";
 import { updateDoc } from "../api/document";
 
 export default function ProductPage() {
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const { current } = useSelector(state);
+  const { user } = useSelector(authState);
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -44,7 +46,10 @@ export default function ProductPage() {
 
   const publishDocHandler = async () => {
     const userId = JSON.parse(localStorage.getItem("user"))._id;
-    const response = await updateDoc(current._id, { userId,isPublished: !current.isPublished });
+    const response = await updateDoc(current._id, {
+      userId,
+      isPublished: !current.isPublished,
+    });
     if (response) {
       setPublishDialogOpen(false);
       navigation("/dashboard/products");
@@ -81,33 +86,35 @@ export default function ProductPage() {
                 Back
               </Button>
             </Grid>
-            <Grid item md={6} align="right">
-              <Button
-                sx={{ mr: 1 }}
-                variant="contained"
-                startIcon={<Iconify icon="ant-design:send-outlined" />}
-                onClick={() => setPublishDialogOpen(true)}
-              >
-                {current.isPublished ? "Unpublish" : "Publish"}
-              </Button>
-              <Button
-                sx={{ mr: 1 }}
-                variant="contained"
-                startIcon={
-                  <Iconify icon="ant-design:safety-certificate-outlined" />
-                }
-              >
-                Protect
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={
-                  <Iconify icon="ant-design:cloud-download-outlined" />
-                }
-              >
-                Certify
-              </Button>
-            </Grid>
+            {user._id === current.creator._id && (
+              <Grid item md={6} align="right">
+                <Button
+                  sx={{ mr: 1 }}
+                  variant="contained"
+                  startIcon={<Iconify icon="ant-design:send-outlined" />}
+                  onClick={() => setPublishDialogOpen(true)}
+                >
+                  {current.isPublished ? "Unpublish" : "Publish"}
+                </Button>
+                <Button
+                  sx={{ mr: 1 }}
+                  variant="contained"
+                  startIcon={
+                    <Iconify icon="ant-design:safety-certificate-outlined" />
+                  }
+                >
+                  Protect
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={
+                    <Iconify icon="ant-design:cloud-download-outlined" />
+                  }
+                >
+                  Certify
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
 
@@ -150,28 +157,30 @@ export default function ProductPage() {
           </Grid>
         </Grid>
 
-        <Grid item mt={5}>
-          <Grid item md={12} align="right">
-            <Button
-              disabled={current.isPublished}
-              sx={{ mr: 1 }}
-              variant="outlined"
-              startIcon={<Iconify icon="ant-design:delete-fill" />}
-              onClick={() => deleteDocHandler(current._id)}
-            >
-              Delete
-            </Button>
-            <Button
-              disabled={current.isPublished}
-              sx={{ mr: 1 }}
-              variant="contained"
-              startIcon={<Iconify icon="ant-design:send-outlined" />}
-              onClick={() => updateDocHandler(current._id)}
-            >
-              Update
-            </Button>
+        {user._id === current.creator._id && (
+          <Grid item mt={5}>
+            <Grid item md={12} align="right">
+              <Button
+                disabled={current.isPublished}
+                sx={{ mr: 1 }}
+                variant="outlined"
+                startIcon={<Iconify icon="ant-design:delete-fill" />}
+                onClick={() => deleteDocHandler(current._id)}
+              >
+                Delete
+              </Button>
+              <Button
+                disabled={current.isPublished}
+                sx={{ mr: 1 }}
+                variant="contained"
+                startIcon={<Iconify icon="ant-design:send-outlined" />}
+                onClick={() => updateDocHandler(current._id)}
+              >
+                Update
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Container>
     </>
   );

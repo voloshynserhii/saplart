@@ -1,16 +1,20 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Avatar, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Grid, Container, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  Grid,
+  Container,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  // BlogPostCard,
-  BlogPostsSort,
-  BlogPostsSearch,
-} from "../sections/@dashboard/blog";
-import {
-  state,
-  getHistory,
-} from "../store/reducers/documents";
+import { useNavigate } from "react-router-dom";
+import { BlogPostsSort, BlogPostsSearch } from "../sections/@dashboard/blog";
+import { fDate } from "../utils/formatTime";
+import { state, getHistory, setCurrentDocument } from "../store/reducers/documents";
 
 const SORT_OPTIONS = [
   { value: "latest", label: "Latest" },
@@ -19,13 +23,14 @@ const SORT_OPTIONS = [
 ];
 
 export default function NewsPage() {
+  const navigation = useNavigate();
   const dispatch = useDispatch();
   const { news } = useSelector(state);
-  
+
   useEffect(() => {
     dispatch(getHistory());
   }, [dispatch]);
-  
+
   return (
     <>
       <Helmet>
@@ -55,36 +60,37 @@ export default function NewsPage() {
         </Stack>
 
         <Grid container spacing={3}>
-          
-        <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      {news.map((event) => {
-
-        return (
-          <ListItem
-            key={event._id}
-            secondaryAction={
-              <div>View</div>
-            }
-            // disablePadding
-          >
-            <ListItemButton>
-              <ListItemAvatar>
-                <Avatar
-                  alt={event.creator?.name}
-                  // src={`/static/images/avatar/${value + 1}.jpg`}
-                />
-              </ListItemAvatar>
-              <ListItemText id={event._id} primary={event.title} />
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-    </List>
-          
-          
-          {/* {news?.map(event => (
-            <BlogPostCard key={event._id} event={event} />
-          ))} */}
+          <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
+            {news.map((event) => {
+              return (
+                <ListItem
+                  key={event._id}
+                  secondaryAction={
+                    <Avatar
+                      alt={event.creator?.name}
+                      // src={`/static/images/avatar/${value + 1}.jpg`}
+                      onClick={() => alert("Profile page")}
+                    />
+                  }
+                >
+                  <ListItemButton
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                    onClick={() => {
+                      dispatch(setCurrentDocument(event));
+                      navigation(`/dashboard/product`)
+                    }}
+                  >
+                    <Typography variant="h5" gutterBottom>
+                      {event.title}
+                    </Typography>
+                    <Typography variant="body1">
+                      {fDate(event.updatedAt)}
+                    </Typography>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
         </Grid>
       </Container>
     </>

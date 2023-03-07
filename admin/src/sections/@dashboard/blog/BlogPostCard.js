@@ -3,7 +3,6 @@ import {
   Box,
   Link,
   Card,
-  Grid,
   Avatar,
   Typography,
   CardContent,
@@ -13,11 +12,11 @@ import { fDate } from "../../../utils/formatTime";
 
 import SvgColor from "../../../components/svg-color";
 import Iconify from "../../../components/iconify";
-import { url } from "../../../utils/consts";
+// import { url } from "../../../utils/consts";
 
 const StyledCardMedia = styled("div")({
   position: "relative",
-  paddingTop: "50%",
+  paddingTop: "35px",
 });
 
 const StyledTitle = styled(Link)({
@@ -43,23 +42,14 @@ const StyledInfo = styled("div")(({ theme }) => ({
   color: theme.palette.text.disabled,
 }));
 
-const StyledCover = styled("img")({
-  top: 0,
-  width: "100%",
-  height: "100%",
-  // objectFit: "cover",
-  position: "absolute",
-});
-
 export default function BlogPostCard({ event }) {
-  const { title, action, path, createdAt, creator } = event;
+  const { title, action, createdAt, creator } = event;
 
   let actionText;
   if (action === "documentUpdate") actionText = "Document was updated";
   if (action === "documentCreate") actionText = "Document was created";
 
   return (
-    <Grid item xs={12} md={4}>
       <Card sx={{ position: "relative" }}>
         <StyledCardMedia>
           <SvgColor
@@ -75,12 +65,6 @@ export default function BlogPostCard({ event }) {
             }}
           />
           <StyledAvatar alt={creator.name} src={creator.avatarUrl || ""} />
-
-          <StyledCover
-            alt={title}
-            src={`${url}/${path}`}
-            onError={(e) => (e.currentTarget.src = "/assets/no-image.png")}
-          />
         </StyledCardMedia>
 
         <CardContent>
@@ -107,6 +91,5 @@ export default function BlogPostCard({ event }) {
           </StyledInfo>
         </CardContent>
       </Card>
-    </Grid>
   );
 }

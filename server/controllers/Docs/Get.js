@@ -25,9 +25,12 @@ module.exports = async (req, res, next) => {
           isPublished: 1,
           publishedAt: 1,
           updatedAt: 1,
-          inFavorites: 1
+          inFavorites: 1,
+          creator: 1
         })
+        .sort({ updatedAt: -1 })
         .populate("history")
+        .populate("creator")
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })

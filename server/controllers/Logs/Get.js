@@ -37,14 +37,15 @@ module.exports = async (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = 12;
   let totalItems;
-  
+
   const query = { isPublished: true };
-  
+
   Document.find(query)
     .countDocuments()
     .then((count) => {
       totalItems = count;
       return Document.find(query)
+        .sort({ updatedAt: -1 })
         .select({
           _id: 1,
           title: 1,
@@ -55,9 +56,9 @@ module.exports = async (req, res, next) => {
           isPublished: 1,
           publishedAt: 1,
           updatedAt: 1,
-          inFavorites: 1
+          inFavorites: 1,
         })
-        .populate("history")
+        .populate("creator")
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
