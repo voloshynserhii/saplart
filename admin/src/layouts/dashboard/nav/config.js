@@ -22,8 +22,8 @@ const navConfig = [
     icon: getIcon('safety-certificate-outlined'),
   },
   {
-    title: 'News',
-    path: '/dashboard/news',
+    title: 'Published IPRs',
+    path: process.env.REACT_APP_PUBLIC_SITE || 'http://localhost:3000',
     icon: getIcon('coffee-outlined'),
   },
   // {

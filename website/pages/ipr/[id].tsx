@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -21,22 +21,26 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import { Favorite as FavoriteIcon } from "@mui/icons-material/";
+import {
+  Favorite as FavoriteIcon,
+  KeyboardBackspace as KeyboardBackspaceIcon,
+} from "@mui/icons-material";
 import { CardActionArea } from "@mui/material";
-import { state } from "../../store/reducers/auth";
+import FormDialog from "../../components/Dialog";
+import { state, setUser } from "../../store/reducers/auth";
+
 import { docs } from "../../api";
 
 export default function IPR(props) {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { user } = useSelector(state);
   const [item, setItem] = useState({});
+  const [rating, setRating] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { id } = router.query;
 
-  const { path, title, tags = [], description }: any = item;
-
-  const getDocData = async (id) => {
-    const data = await docs.getDoc(id);
-    setItem(data.doc);
-  };
+  const { path, title, tags = [], description, rateCount }: any = item;
 
   useEffect(() => {
     if (id) {
@@ -44,8 +48,47 @@ export default function IPR(props) {
     }
   }, [id]);
 
+  const getDocData = async (id) => {
+    const data = await docs.getDoc(id);
+    setItem(data.doc);
+    setRating(data.doc.rating);
+  };
+
+  const handleAddToFavorites = async () => {
+    if (user) {
+      const response = await docs.addToFavorites(id, user._id);
+      if (response.user) {
+        dispatch(setUser(response.user));
+      }
+    } else {
+      setDialogOpen(true);
+    }
+  };
+
+  const handleUpdateRating = async (val) => {
+    if (user) {
+      const data = await docs.updateDoc(id, val);
+      if (data.doc) {
+        setItem(data.doc);
+        setRating(data.doc.rating);
+      }
+    } else {
+      setDialogOpen(true);
+    }
+  };
+
+  const handleSubscribe = (email: string) => {
+    setDialogOpen(false);
+    alert(`Updates will be sent to your email ${email}`);
+  };
+
   return (
     <Container>
+      <FormDialog
+        open={dialogOpen}
+        onSubscribe={handleSubscribe}
+        onClose={() => setDialogOpen(false)}
+      />
       <Grid item my={10}>
         <Grid item sm={12} mb={2}>
           <Typography variant="h4">{title}</Typography>
@@ -54,7 +97,7 @@ export default function IPR(props) {
           <Grid item md={9}>
             <Button
               variant="outlined"
-              // startIcon={<Iconify icon="eva:arrow-back-outline" />}
+              startIcon={<KeyboardBackspaceIcon />}
               onClick={() => router.push("/")}
             >
               Back
@@ -72,17 +115,15 @@ export default function IPR(props) {
               <Tooltip title="Rate it!">
                 <Rating
                   name="simple-controlled"
-                  value={5}
+                  value={rating / rateCount}
                   precision={0.5}
-                  // onChange={(event, newValue) => {
-                  //   setValue(newValue);
-                  // }}
+                  onChange={(event, newValue) => handleUpdateRating(newValue)}
                 />
               </Tooltip>
               <Tooltip title={`Add to Favorites`}>
                 <IconButton
                   aria-label="add to favorites"
-                  // onClick={handleAddToFavorites}
+                  onClick={handleAddToFavorites}
                 >
                   <FavoriteIcon color={true ? "error" : "action"} />
                 </IconButton>
@@ -103,9 +144,6 @@ export default function IPR(props) {
                 alt="green iguana"
               />
               <CardContent>
-                {/* <Typography gutterBottom variant="h5" component="div">
-                  {description}
-                </Typography> */}
                 <Typography variant="body2" color="text.secondary">
                   {description}
                 </Typography>

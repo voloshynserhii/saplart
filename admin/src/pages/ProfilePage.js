@@ -1,27 +1,27 @@
 import { Helmet } from "react-helmet-async";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Stack, Popover, MenuItem, Container, Typography } from "@mui/material";
 
 import Iconify from "../components/iconify";
 import { ProfileForm } from "../sections/auth/profile";
-import { state, updateUser } from "../store/reducers/auth";
+import { state, updateUser, getUser } from "../store/reducers/auth";
 
 export default function UserPage() {
   const [open, setOpen] = useState(null);
   const { user } = useSelector(state);
   const dispatch = useDispatch();
-
-  // const handleOpenMenu = (event) => {
-  //   setOpen(event.currentTarget);
-  // };
-
+  
+  useEffect(() => {
+    if(user?._id) dispatch(getUser(user._id))
+  }, []);
+  
   const handleCloseMenu = () => {
     setOpen(null);
   };
 
   const handleUpdateUser = (userData) => {
-    dispatch(updateUser(userData));
+    dispatch(updateUser({...userData, id: user._id}));
   };
 
   return (

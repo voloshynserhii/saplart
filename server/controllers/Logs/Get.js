@@ -57,6 +57,7 @@ module.exports = async (req, res, next) => {
           publishedAt: 1,
           updatedAt: 1,
           inFavorites: 1,
+          rating: 1
         })
         .populate("creator")
         .skip((currentPage - 1) * perPage)

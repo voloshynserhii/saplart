@@ -26,7 +26,9 @@ module.exports = async (req, res, next) => {
           publishedAt: 1,
           updatedAt: 1,
           inFavorites: 1,
-          creator: 1
+          creator: 1,
+          rating: 1,
+          rateCount: 1
         })
         .sort({ updatedAt: -1 })
         .populate("history")

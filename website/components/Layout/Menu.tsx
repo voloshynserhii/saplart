@@ -27,6 +27,7 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
 
   const handleLogout = () => {
     onLogout();
+    handleMenuClose();
   };
 
   const handleMobileMenuClose = () => {

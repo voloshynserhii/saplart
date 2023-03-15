@@ -15,8 +15,13 @@ export const login = createAsyncThunk("login", async (query) => {
   return auth.login(query);
 });
 
+export const getUser = createAsyncThunk("getUser", async (id) => {
+  return auth.getUser(id);
+});
+
 export const updateUser = createAsyncThunk("updateUser", async (query) => {
-  return ;
+  const { id } = query;
+  return auth.updateUser(id, query);
 });
 
 export const authSlice = createSlice({
@@ -48,8 +53,15 @@ export const authSlice = createSlice({
           state.error = action.payload.data;
         }
       })
+      .addCase(getUser.fulfilled, (state, action) => {
+        if (action.payload.user) {
+          state.user = action.payload.user;
+        }
+        if (action.payload.status !== 200) {
+          state.error = action.payload.data;
+        }
+      })
       .addCase(login.fulfilled, (state, action) => {
-        console.log(action.payload)
         if (action.payload.user) {
           state.user = action.payload.user;
           state.isAuthenticated = true;

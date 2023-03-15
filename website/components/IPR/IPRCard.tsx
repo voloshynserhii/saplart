@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 import {
@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import FormDialog from '../Dialog';
 import { red } from "@mui/material/colors";
 import {
   Favorite as FavoriteIcon,
@@ -25,7 +26,7 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material/";
 import { docs } from "../../api";
-import { setUser } from "../../store/reducers/auth";
+import { state, setUser } from "../../store/reducers/auth";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -42,22 +43,53 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function IPRCard({ item, user }) {
+export default function IPRCard({ item }) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { user } = useSelector(state);
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
-  const { _id, title, description, path, inFavorites, publishedAt, updatedAt } =
-    item;
+  const [itemData, setItemData] = useState({});
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const {
+    _id,
+    title,
+    description,
+    path,
+    inFavorites,
+    publishedAt,
+    updatedAt,
+    rating,
+    rateCount,
+  } = itemData || item;
+
+  useEffect(() => {
+    if (item) setItemData(item);
+  }, [item]);
 
   useEffect(() => {
     setFavorite(user?.favorites?.includes(_id));
-  }, [user]);
+  }, [user, _id]);
 
   const handleAddToFavorites = async () => {
-    const response = await docs.addToFavorites(_id, user._id);
-    if (response.user) {
-      dispatch(setUser(response.user));
+    if(user) {
+      const response = await docs.addToFavorites(_id, user._id);
+      if (response.user) {
+        dispatch(setUser(response.user));
+      }
+    } else {
+      setDialogOpen(true);
+    }
+  };
+
+  const handleUpdateRating = async (val) => {
+    if(user) {
+      const data = await docs.updateDoc(_id, val);
+      if (data.doc) {
+        setItemData(data.doc);
+      }
+    } else {
+      setDialogOpen(true);
     }
   };
 
@@ -66,15 +98,21 @@ export default function IPRCard({ item, user }) {
   };
   const date = moment(new Date(updatedAt), "MM/DD/YYYY").format("D MMMM Y");
 
+  const handleSubscribe = (email: string) => {
+    setDialogOpen(false);
+    alert(`Updates will be sent to your email ${email}`);
+  };
+  
   return (
     <Card sx={{ width: "100%", my: 1 }}>
+      <FormDialog open={dialogOpen} onSubscribe={handleSubscribe} onClose={() => setDialogOpen(false)} />
       <CardHeader
         avatar={
-          <IconButton aria-label="profile">
-            <Avatar
-              sx={{ bgcolor: red[500] }}
-              onClick={() => alert("Open profile")}
-            >
+          <IconButton
+            aria-label="profile"
+            onClick={() => router.push(`/profile/${item.creator._id}`)}
+          >
+            <Avatar sx={{ bgcolor: red[500] }}>
               {item.creator?.name?.slice(0, 1)}
             </Avatar>
           </IconButton>
@@ -84,16 +122,6 @@ export default function IPRCard({ item, user }) {
             <IconButton aria-label="share">
               <ShareIcon />
             </IconButton>
-            {/* {user && (
-              <IconButton
-                aria-label="add to favorites"
-                onClick={handleAddToFavorites}
-              >
-                <Badge badgeContent={inFavorites?.length || 0} color="primary">
-                  <FavoriteIcon color={favorite ? "error" : "action"} />
-                </Badge>
-              </IconButton>
-            )} */}
           </>
         }
         // title={title}
@@ -121,7 +149,7 @@ export default function IPRCard({ item, user }) {
           color="text.secondary"
           sx={{ minHeight: "20px" }}
         >
-          {description.length > 40
+          {description?.length > 40
             ? `${description.slice(0, 40)}...`
             : description}
         </Typography>
@@ -149,11 +177,10 @@ export default function IPRCard({ item, user }) {
             <Tooltip title="Rate it!">
               <Rating
                 name="simple-controlled"
-                value={5}
+                value={rating / rateCount}
+                // disabled={!user}
                 precision={0.5}
-                // onChange={(event, newValue) => {
-                //   setValue(newValue);
-                // }}
+                onChange={(event, newValue) => handleUpdateRating(newValue)}
               />
             </Tooltip>
             <Tooltip

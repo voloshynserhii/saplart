@@ -19,6 +19,8 @@ module.exports = async (req, res, next) => {
       path: 1,
       history: 1,
       isPublished: 1,
+      rating: 1,
+      rateCount: 1
     })
     .populate("history")
     .populate("creator")

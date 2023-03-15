@@ -26,6 +26,8 @@ const documentSchema = new Schema(
     isPublished: { type: Boolean, default: false },
     publishedAt: Date,
     inFavorites: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    rating: { type: Number, default: 0 },
+    rateCount: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-// const { validationResult } = require("express-validator/check");
 
 const Document = require("../../models/Document.model");
 const Log = require("../../models/Log.model");
@@ -13,12 +12,12 @@ const clearImage = (filePath) => {
 module.exports = async (req, res, next) => {
   const docId = req.params.docId;
 
-  const { title, description, userId, isPublished } = req.body;
+  const { title, description, userId, isPublished, rating } = req.body;
   const tags = req.body.tags?.split(",") || [];
 
   let { path } = req.body;
 
-  if (!userId) {
+  if (!userId && !rating) {
     return res.status(422).json('No user provided');
   }
   
@@ -31,9 +30,18 @@ module.exports = async (req, res, next) => {
 
     return res.status(200).json('success');
   }
+  
+  if(rating !== undefined) {
+    doc.rateCount = doc.rateCount ? doc.rateCount + 1 : 1
+    doc.rating = rating + doc.rating || 0
 
+    doc.save();
+    return res.status(200).json({ doc });
+  }
+  
   if(!!doc.isPublished) return;
 
+  
   if (req.file) {
     path = req.file.path;
   }
@@ -75,7 +83,6 @@ module.exports = async (req, res, next) => {
       history.push(newLog._id);
       doc.history = history;
       
-      console.log(history)
       return doc.save();
     })
     .then((result) => {
