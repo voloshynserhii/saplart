@@ -64,7 +64,7 @@ const IPRList = () => {
         {data?.length ? (
           data.map((item) => (
             <Grid item xs={12} md={6} key={item._id}>
-              <IPRCard item={item} user={user} />
+              <IPRCard item={item} />
             </Grid>
           ))
         ) : (
