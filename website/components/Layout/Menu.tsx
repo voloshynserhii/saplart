@@ -101,7 +101,9 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
       </MenuItem>
 
       <MenuItem
-        onClick={() => (!user ? router.push("/auth") : alert("Not implemented yet"))}
+        onClick={() =>
+          !user ? router.push("/auth") : router.push(`/profile/${user._id}`)
+        }
       >
         <IconButton
           size="large"
@@ -130,11 +132,31 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
+            onClick={() => router.push("/")}
           >
             SAPLART
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Typography
+              variant="body1"
+              noWrap
+              component="div"
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "block",
+                  alignSelf: "center",
+                  cursor: "pointer",
+                  marginRight: 10,
+                },
+              }}
+              onClick={() =>
+                router.push(`${process.env.NEXT_PUBLIC_ADMIN_URL}`)
+              }
+            >
+              For creators
+            </Typography>
             {user && (
               <IconButton
                 size="large"
@@ -154,8 +176,8 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
                 aria-label="account of current user"
                 aria-controls={menuId}
                 aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
                 color="inherit"
+                onClick={() => router.push(`/profile/${user._id}`)}
               >
                 <AccountCircle />
               </IconButton>

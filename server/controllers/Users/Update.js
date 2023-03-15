@@ -1,12 +1,11 @@
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 const User = require("../../models/User.model");
 
 module.exports = async (req, res, next) => {
   const { id } = req.params;
   const { name, about, password } = req.body;
-  console.log(req.body);
+
   if (!password || password.length < 4) {
     return res.status(422).json("Password must be at least 4 characters!");
   }

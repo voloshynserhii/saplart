@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Rating,
 } from "@mui/material";
 
 import Dialog from "../components/dialog";
@@ -154,6 +155,12 @@ export default function ProductPage() {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Rating
+              sx={{ mt: 2 }}
+              name="simple-controlled"
+              precision={0.2}
+              value={current?.rating / current.rateCount}
+            />
           </Grid>
         </Grid>
 
