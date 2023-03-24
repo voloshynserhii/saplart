@@ -98,7 +98,7 @@ export default function IPR(props) {
             <Button
               variant="outlined"
               startIcon={<KeyboardBackspaceIcon />}
-              onClick={() => router.push("/")}
+              onClick={() => router.back()}
             >
               Back
             </Button>

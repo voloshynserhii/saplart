@@ -35,6 +35,7 @@ module.exports = async (req, res, next) => {
     doc.rateCount = doc.rateCount ? doc.rateCount + 1 : 1
     doc.rating = rating + doc.rating || 0
 
+    doc.totalRating = doc.rating / doc.rateCount
     doc.save();
     return res.status(200).json({ doc });
   }

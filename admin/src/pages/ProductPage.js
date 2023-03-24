@@ -155,12 +155,13 @@ export default function ProductPage() {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Rating
+            {current.isPublished && <Rating
               sx={{ mt: 2 }}
               name="simple-controlled"
               precision={0.2}
-              value={current?.rating / current.rateCount}
-            />
+              value={current?.totalRating || 0}
+              disabled
+            />}
           </Grid>
         </Grid>
 

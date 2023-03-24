@@ -14,7 +14,6 @@ const documentSchema = new Schema(
     },
     path: {
       type: String,
-      required: true,
     },
     tags: [{ type: String, trim: true }],
     // tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
@@ -27,7 +26,8 @@ const documentSchema = new Schema(
     publishedAt: Date,
     inFavorites: [{ type: Schema.Types.ObjectId, ref: "User" }],
     rating: { type: Number, default: 0 },
-    rateCount: { type: Number, default: 0 }
+    rateCount: { type: Number, default: 0 },
+    totalRating: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

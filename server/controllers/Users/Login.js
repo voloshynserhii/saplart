@@ -3,43 +3,30 @@ const jwt = require("jsonwebtoken");
 const User = require("../../models/User.model");
 
 module.exports = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  let loadedUser = {};
+  const {email, password} = req.body;
 
-  User.findOne({ email: email })
-    .then((user) => {
-      if (!user) {
-        return null
-      }
-      loadedUser._id = user._id;
-      loadedUser.name = user.name;
-      loadedUser.email = user.email;
-      loadedUser.favorites = user.favorites;
-      return bcrypt.compare(password, user.password);
-    })
-    .then((isEqual) => {
-      if(isEqual === null) {
-        return res.status(401).json('A user with this email could not be found')
-      }
-      if (!isEqual) {
-        return res.status(401).json('Wrong password!')
-      }
-      const token = jwt.sign(
-        {
-          email: loadedUser.email,
-          userId: loadedUser._id.toString(),
-        },
-        process.env.SECRET,
-        { expiresIn: "24h" }
-      );
-      req.session.userId = loadedUser._id.toString();
-      res.status(200).json({ token: token, user: loadedUser });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+  try {
+    const user = await User.findOne({ email: email }).lean();
+    if (!user) {
+      return res.status(401).json("A user with this email could not be found");
+    }
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      return res.status(401).json("Wrong password!");
+    }
+
+    const token = await jwt.sign(
+      {
+        email: user.email,
+        userId: user._id.toString(),
+      },
+      process.env.SECRET,
+      { expiresIn: "24h" }
+    );
+    req.session.userId = user._id.toString();
+    delete user.password
+    res.status(200).json({ token, user });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };

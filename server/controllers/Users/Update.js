@@ -1,10 +1,9 @@
 const bcrypt = require("bcryptjs");
-
 const User = require("../../models/User.model");
 
 module.exports = async (req, res, next) => {
   const { id } = req.params;
-  const { name, about, password } = req.body;
+  const { name, about, password, contacts, socialLinks } = req.body;
 
   if (!password || password.length < 4) {
     return res.status(422).json("Password must be at least 4 characters!");
@@ -22,6 +21,13 @@ module.exports = async (req, res, next) => {
     }
     user.name = name || user.name;
     user.about = about || user.about;
+    if(contacts) {
+      if(socialLinks?.length) {
+        user.contacts = {...contacts, socialLinks}
+      } else {
+        user.contacts = contacts
+      }
+    }
     user.save();
     
     delete user.password;

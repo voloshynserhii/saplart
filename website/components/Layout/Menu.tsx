@@ -38,6 +38,10 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+  
+  const handleOpenProfile = () => {
+    router.push(`/profile/${user._id}`);
+  }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -60,7 +64,7 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleOpenProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Log out</MenuItem>
     </Menu>
   );
@@ -177,7 +181,8 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
                 aria-controls={menuId}
                 aria-haspopup="true"
                 color="inherit"
-                onClick={() => router.push(`/profile/${user._id}`)}
+                onClick={handleProfileMenuOpen}
+                // onClick={() => router.push(`/profile/${user._id}`)}
               >
                 <AccountCircle />
               </IconButton>

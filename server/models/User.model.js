@@ -16,6 +16,23 @@ const userSchema = new Schema({
     type: String,
     trim: true,
   },
+  contacts: {
+    phone: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+    },
+    socialLinks: [{
+      type: String,
+      trim: true,
+    }]
+  },
+  avatarPath: {
+    type: String,
+  },
   isCreator: {
     type: Boolean,
     default: false,

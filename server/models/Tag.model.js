@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const tagSchema = new Schema(
   {
-    name: { type: String },
+    name: { type: String, trim: true },
+    totalUsed: { type: Number, default: 0 },
   }
 );
 

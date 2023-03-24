@@ -20,7 +20,8 @@ module.exports = async (req, res, next) => {
       history: 1,
       isPublished: 1,
       rating: 1,
-      rateCount: 1
+      rateCount: 1,
+      totalRating: 1
     })
     .populate("history")
     .populate("creator")

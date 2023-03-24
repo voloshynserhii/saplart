@@ -61,6 +61,7 @@ export default function IPRCard({ item }) {
     updatedAt,
     rating,
     rateCount,
+    totalRating
   } = itemData || item;
 
   useEffect(() => {
@@ -153,8 +154,37 @@ export default function IPRCard({ item }) {
             ? `${description.slice(0, 40)}...`
             : description}
         </Typography>
+        <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Tooltip title="Rate it!">
+              <Rating
+                name="simple-controlled"
+                value={rating / rateCount}
+                // disabled={!user}
+                precision={0.5}
+                onChange={(event, newValue) => handleUpdateRating(newValue)}
+              />
+            </Tooltip>
+            <Tooltip
+              title={`Add to Favorites. ${inFavorites?.length} user likes it`}
+            >
+              <IconButton
+                aria-label="add to favorites"
+                onClick={handleAddToFavorites}
+              >
+                <Badge badgeContent={inFavorites?.length || 0} color="primary">
+                  <FavoriteIcon color={favorite ? "error" : "action"} />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+          </Box>
       </CardContent>
-      <CardActions disableSpacing>
+      {/* <CardActions disableSpacing>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -163,7 +193,7 @@ export default function IPRCard({ item }) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
-      </CardActions>
+      </CardActions> */}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>{description}</Typography>
@@ -177,7 +207,7 @@ export default function IPRCard({ item }) {
             <Tooltip title="Rate it!">
               <Rating
                 name="simple-controlled"
-                value={rating / rateCount}
+                value={totalRating}
                 // disabled={!user}
                 precision={0.5}
                 onChange={(event, newValue) => handleUpdateRating(newValue)}
