@@ -12,20 +12,35 @@ module.exports = async (req, res, next) => {
   const query = userId ? { creator: userId } : { isPublished: true };
 
   try {
-    const sorting = {}
-    if(sortBy === 'asc' || sortBy === 'desc') {
-      sorting.publishedAt = sortBy === 'asc' ? 1 : -1
+    const sorting = {};
+    if (sortBy === "asc" || sortBy === "desc") {
+      sorting.publishedAt = sortBy === "asc" ? 1 : -1;
     }
-    if(sortBy === 'last' || sortBy === 'oldest') {
-      sorting.updatedAt = sortBy === 'oldest' ? 1 : -1
+    if (sortBy === "last" || sortBy === "oldest") {
+      sorting.updatedAt = sortBy === "oldest" ? 1 : -1;
     }
-    if(sortBy === 'rating') {
-      sorting.totalRating = -1
+    if (sortBy === "rating") {
+      sorting.totalRating = -1;
     }
-    if(sortBy === 'popular') {
-      sorting.inFavorites = -1
+    if (sortBy === "popular") {
+      sorting.inFavorites = -1;
+    }
+
+    if (filters?.tag) {
+      query.tags = filters.tag;
+    }
+    if (filters?.text) {
+      query.$or = [
+        { title: { $regex: filters.text, $options: "i" } },
+        { description: { $regex: filters.text, $options: "i" } },
+        // { 'creator.name': { $regex: filters.text, $options: "i" } },
+      ];
     }
     
+    if(filters?.rating) {
+      query.totalRating = { $gte: +filters.rating }
+    }
+
     const totalItems = await Document.find(query).countDocuments();
     const docs = await Document.find(query)
       .select({
@@ -42,11 +57,13 @@ module.exports = async (req, res, next) => {
         creator: 1,
         rating: 1,
         rateCount: 1,
-        totalRating: 1
+        totalRating: 1,
       })
       .sort(sorting)
-      .populate("history")
-      .populate("creator")
+      .populate({
+        path: 'creator',
+        select: {name: 1, }
+      })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
@@ -55,6 +72,7 @@ module.exports = async (req, res, next) => {
       totalItems,
     });
   } catch (e) {
+    console.log(e.message);
     return res.status(500).json("Couldn't fetch documents");
   }
 };

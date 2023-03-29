@@ -27,9 +27,7 @@ interface Profile {
 export default function ProfileForm({ user, onOpenIPR }) {
   const [fallbackVisible, setFallbackVisible] = useState<boolean>(true);
   const { name, about, avatarPath, documents, contacts }: Profile = user;
-  const [imgSrc, setImgSrc] = useState<string | undefined>(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/${avatarPath}`
-  );
+
   const fallback = "/icons/defaultAvatar.svg";
 
   const onError = () => setFallbackVisible(false);
@@ -52,7 +50,7 @@ export default function ProfileForm({ user, onOpenIPR }) {
                 alt="fallback picture"
               />
             )}
-            {!fallbackVisible && (
+            {!fallbackVisible && avatarPath && (
               <CardMedia
                 sx={{
                   objectFit: "contain",

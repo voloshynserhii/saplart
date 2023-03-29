@@ -4,8 +4,13 @@ import { useRouter } from "next/router";
 import {
   Box,
   Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
   Container,
   Grid,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -17,15 +22,11 @@ import {
   Rating,
   Tooltip,
 } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import {
   Favorite as FavoriteIcon,
   KeyboardBackspace as KeyboardBackspaceIcon,
 } from "@mui/icons-material";
-import { CardActionArea } from "@mui/material";
+
 import FormDialog from "../../components/Dialog";
 import { state, setUser } from "../../store/reducers/auth";
 
@@ -35,12 +36,15 @@ export default function IPR(props) {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user } = useSelector(state);
+  const [fallbackVisible, setFallbackVisible] = useState<boolean>(false);
   const [item, setItem] = useState({});
   const [rating, setRating] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { id } = router.query;
 
   const { path, title, tags = [], description, rateCount }: any = item;
+  const fallback = "/icons/defaultImage.png";
+  const onError = () => setFallbackVisible(true);
 
   useEffect(() => {
     if (id) {
@@ -137,12 +141,32 @@ export default function IPR(props) {
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
-              <CardMedia
-                component="img"
-                height="140"
-                image={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`}
-                alt="green iguana"
-              />
+              {fallbackVisible && (
+                <CardMedia
+                  sx={{
+                    objectFit: "contain",
+                    position: "inherit",
+                    zIndex: 2,
+                  }}
+                  component="img"
+                  height="140"
+                  image={fallback}
+                  alt={title}
+                />
+              )}
+              {!fallbackVisible && path && (
+                <CardMedia
+                  sx={{
+                    zIndex: 3,
+                  }}
+                  component="img"
+                  height="140"
+                  image={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`}
+                  onError={onError}
+                  onLoad={() => setFallbackVisible(false)}
+                  alt={title}
+                />
+              )}
               <CardContent>
                 <Typography variant="body2" color="text.secondary">
                   {description}

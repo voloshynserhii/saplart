@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Checkbox,
@@ -56,10 +56,26 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
+interface FiltersProps {
+  rating?: string;
+}
 
-export default function CustomizedDialogs({ open, onClose, onSetFilter }) {
-  const [filter, setFilter] = useState('');
-  
+export default function FilterModal({ open, onClose, onSetFilter }) {
+  const [filters, setFilters] = useState<FiltersProps>({});
+
+  const applyFiltersHandler = () => {
+    onSetFilter(filters);
+  };
+
+  const addFilterHandler = (name: string, filter: string) => {
+    const existing = filters[name] || "";
+    if (existing !== filter) {
+      setFilters((prev) => ({ ...prev, [name]: filter }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: filter }));
+    }
+  };
+
   return (
     <BootstrapDialog
       onClose={onClose}
@@ -69,21 +85,21 @@ export default function CustomizedDialogs({ open, onClose, onSetFilter }) {
       <BootstrapDialogTitle id="customized-dialog-title" onClose={onClose}>
         Choose filters
       </BootstrapDialogTitle>
-      <DialogContent dividers sx={{minWidth: 500}}>
+      <DialogContent dividers sx={{ minWidth: 500 }}>
         <FormControl
           required
           component="fieldset"
           sx={{ m: 3 }}
           variant="standard"
         >
-          <FormLabel component="legend">By Rating</FormLabel>
+          <FormLabel component="label">By Rating</FormLabel>
           <FormGroup>
             <FormControlLabel
               control={
                 <Checkbox
-                    // checked={gilad}
-                    onChange={() => setFilter('gilad')}
-                  name="gilad"
+                  checked={filters?.rating === "4.5"}
+                  onChange={(e) => addFilterHandler("rating", e.target.value)}
+                  value="4.5"
                 />
               }
               label="4.5+"
@@ -91,28 +107,38 @@ export default function CustomizedDialogs({ open, onClose, onSetFilter }) {
             <FormControlLabel
               control={
                 <Checkbox
-                  //   checked={jason}
-                  //   onChange={handleChange}
-                  name="jason"
+                  checked={filters?.rating === "4"}
+                  onChange={(e) => addFilterHandler("rating", e.target.value)}
+                  value="4"
                 />
               }
-              label="4"
+              label="4+"
             />
             <FormControlLabel
               control={
                 <Checkbox
-                  //   checked={antoine}
-                  //   onChange={handleChange}
-                  name="antoine"
+                  checked={filters?.rating === "3.5"}
+                  onChange={(e) => addFilterHandler("rating", e.target.value)}
+                  value="3.5"
                 />
               }
               label="3.5+"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={filters?.rating === "3"}
+                  onChange={(e) => addFilterHandler("rating", e.target.value)}
+                  value="3"
+                />
+              }
+              label="3+"
             />
           </FormGroup>
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={() => onSetFilter(filter)}>
+        <Button autoFocus onClick={applyFiltersHandler}>
           Apply
         </Button>
       </DialogActions>

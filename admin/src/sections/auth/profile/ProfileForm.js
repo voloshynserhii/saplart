@@ -153,7 +153,7 @@ export default function ProfileForm({ user, onUpdate }) {
         <TextField
           name="email"
           label="Email address"
-          defaultValue={user.contacts?.email || ""}
+          value={user.contacts?.email || ""}
           helperText="Your public email address"
           onChange={(event) =>
             changeFormHandler("contacts", {
@@ -165,7 +165,7 @@ export default function ProfileForm({ user, onUpdate }) {
         <TextField
           name="phone"
           label="Phone Number"
-          defaultValue={user.contacts?.phone || ""}
+          value={user.contacts?.phone || ""}
           helperText="Your public phone number"
           onChange={(event) =>
             changeFormHandler("contacts", {
