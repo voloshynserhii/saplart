@@ -22,10 +22,10 @@ export default function ProfileForm({ user, onUpdate }) {
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
-    const { name = "", about = "", contacts = {} } = user || {};
+    const { name = "", about = "", contacts = {}, avatarPath } = user || {};
     setSocialLinks(contacts?.socialLinks || []);
 
-    const data = { name, about, contacts };
+    const data = { name, about, contacts, avatarPath };
     if (user) {
       setProfileData(data);
     }
@@ -69,7 +69,7 @@ export default function ProfileForm({ user, onUpdate }) {
   const onUploadFileHandler = (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
-    formData.append("avatarPath", file);
+    formData.append("image", file);
     auth.updateUser(user._id, formData);
     
     if (file) {
@@ -104,7 +104,7 @@ export default function ProfileForm({ user, onUpdate }) {
       >
         {avatar && (
           <Box mt={2} textAlign="center" sx={{ width: 150 }}>
-            <img src={avatar} alt={user?.name} height="100%" loading="lazy" />
+            <img src={avatar || profileData?.avatarPath} alt={user?.name} height="100%" loading="lazy" />
           </Box>
         )}
         <Button variant="contained" component="label">

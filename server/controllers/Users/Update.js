@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   const { id } = req.params;
   const { name, about, password, contacts, socialLinks } = req.body;
 
-  if (!password || password.length < 4) {
+  if ((!password || password.length < 4) && !req.file) {
     return res.status(422).json("Password must be at least 4 characters!");
   }
 
@@ -14,6 +14,11 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.status(404).json("User could not be found");
     }
+    if (req.file) {
+      user.avatarPath = req.file.path;
+      user.save();
+      return res.status(200).json({ user });
+    }
 
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
@@ -21,6 +26,7 @@ module.exports = async (req, res, next) => {
     }
     user.name = name || user.name;
     user.about = about || user.about;
+
     if(contacts) {
       if(socialLinks?.length) {
         user.contacts = {...contacts, socialLinks}

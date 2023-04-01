@@ -11,6 +11,7 @@ import {
   Container,
   Grid,
   IconButton,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -40,11 +41,40 @@ export default function IPR(props) {
   const [item, setItem] = useState({});
   const [rating, setRating] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [fileFormat, setFileFormat] = useState("img");
+
   const { id } = router.query;
 
   const { path, title, tags = [], description, rateCount }: any = item;
-  const fallback = "/icons/defaultImage.png";
+
+  const defultImagePath =
+    fileFormat === "pdf"
+      ? "/PDF-icon.png"
+      : fileFormat === "img"
+      ? "/icons/defaultImage.png"
+      : "/Document-icon.png";
+
   const onError = () => setFallbackVisible(true);
+
+  useEffect(() => {
+    if (path) {
+      if (path.includes(".doc") || path.includes(".xls")) {
+        setFileFormat("document");
+      } else if (path.includes(".pdf")) {
+        setFileFormat("pdf");
+      } else if (
+        path.includes(".png") ||
+        path.includes(".jpg") ||
+        path.includes(".svg") ||
+        path.includes(".gif") ||
+        path.includes(".jpeg")
+      ) {
+        setFileFormat("img");
+      } else {
+        setFileFormat("document");
+      }
+    }
+  }, [path]);
 
   useEffect(() => {
     if (id) {
@@ -142,17 +172,28 @@ export default function IPR(props) {
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
               {fallbackVisible && (
-                <CardMedia
-                  sx={{
-                    objectFit: "contain",
-                    position: "inherit",
-                    zIndex: 2,
-                  }}
-                  component="img"
-                  height="140"
-                  image={fallback}
-                  alt={title}
-                />
+                <>
+                  <CardMedia
+                    sx={{
+                      objectFit: "contain",
+                      position: "inherit",
+                      zIndex: 2,
+                    }}
+                    component="img"
+                    height="140"
+                    image={defultImagePath}
+                    alt={title}
+                  />
+                  <Link
+                    href={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`}
+                    download
+                    target="_blank"
+                    underline="none"
+                    sx={{ display: "block", textAlign: "center" }}
+                  >
+                    View
+                  </Link>
+                </>
               )}
               {!fallbackVisible && path && (
                 <CardMedia

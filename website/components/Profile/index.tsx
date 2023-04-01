@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -31,6 +31,10 @@ export default function ProfileForm({ user, onOpenIPR }) {
   const fallback = "/icons/defaultAvatar.svg";
 
   const onError = () => setFallbackVisible(false);
+
+  useEffect(() => {
+    if (avatarPath) setFallbackVisible(false);
+  }, [avatarPath]);
 
   return (
     <Grid container spacing={3}>

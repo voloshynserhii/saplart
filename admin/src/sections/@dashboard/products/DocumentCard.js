@@ -32,6 +32,8 @@ export default function DocumentCard({ doc, ...props }) {
       path.includes(".jpeg")
     ) {
       setFileFormat("img");
+    } else {
+      setFileFormat("document");
     }
   }, [path]);
 

@@ -67,10 +67,12 @@ export default function ProductAddPage() {
         setFileFormat("document");
       } else if (attachment?.includes("image/")) {
         setFileFormat("img");
+      } else {
+        setFileFormat("document");
       }
     }
   }, [attachment]);
-  console.log(fileFormat);
+
   const onUploadFileHandler = (e) => {
     const file = e.target.files[0];
     setData((data) => ({ ...data, file }));
@@ -104,7 +106,6 @@ export default function ProductAddPage() {
     !id ? dispatch(createDoc(formData)) : await updateDoc(id, formData);
     navigation("/dashboard/products");
   };
-  console.log(attachment);
 
   return (
     <>
@@ -193,7 +194,6 @@ export default function ProductAddPage() {
                   }}
                   component="img"
                   image={attachment}
-                  // onError={(err) => console.log(err)}
                   alt={data.title}
                 />
               ) : (
@@ -209,14 +209,6 @@ export default function ProductAddPage() {
                   alt={data.title}
                 />
               )}
-
-              {/* <img
-                src={attachment}
-                alt={data.title}
-                onerror
-                height="100%"
-                loading="lazy"
-              /> */}
             </Box>
           )}
           <FormControl sx={{ display: "flex", flexDirection: "row", gap: 2 }}>

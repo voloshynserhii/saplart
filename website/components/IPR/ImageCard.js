@@ -1,4 +1,12 @@
-import { Box, Card, Link, Typography, Stack, FormControlLabel } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Card,
+  Link,
+  Typography,
+  Stack,
+  FormControlLabel,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const StyledProductImg = styled("img")({
@@ -11,27 +19,54 @@ const StyledProductImg = styled("img")({
 });
 
 export default function ImageCard({ doc, ...props }) {
-  const { title, isPublished, description, path } = doc;
+  const [fallbackVisible, setFallbackVisible] = useState(false);
+  const [fileFormat, setFileFormat] = useState("img");
+
+  const { title, description, path } = doc;
+
+  const defultImagePath =
+    fileFormat === "pdf"
+      ? "/PDF-icon.png"
+      : fileFormat === "img"
+      ? "/icons/defaultImage.png"
+      : "/Document-icon.png";
+
+  const onError = () => setFallbackVisible(true);
+
+  useEffect(() => {
+    if (path.includes(".doc") || path.includes(".xls")) {
+      setFileFormat("document");
+    } else if (path.includes(".pdf")) {
+      setFileFormat("pdf");
+    } else if (
+      path.includes(".png") ||
+      path.includes(".jpg") ||
+      path.includes(".svg") ||
+      path.includes(".gif") ||
+      path.includes(".jpeg")
+    ) {
+      setFileFormat("img");
+    } else {
+      setFileFormat("document");
+    }
+  }, [path]);
 
   return (
     <Card style={{ cursor: "pointer" }} {...props}>
       <Box sx={{ pt: "100%", position: "relative" }}>
-        {/* {!!isPublished && (
-          <FormControlLabel
-            variant="filled"
-            color="info"
-            sx={{
-              zIndex: 9,
-              top: 16,
-              right: 16,
-              position: "absolute",
-              textTransform: "uppercase",
-            }}
-          >
-            Published
-          </FormControlLabel>
-        )} */}
-        <StyledProductImg alt={title} src={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`} />
+        {fileFormat === "img" && !fallbackVisible ? (
+          <StyledProductImg
+            alt={title}
+            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`}
+            onError={onError}
+          />
+        ) : (
+          <StyledProductImg
+            alt={title}
+            src={defultImagePath}
+            style={{ objectFit: "contain" }}
+          />
+        )}
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
