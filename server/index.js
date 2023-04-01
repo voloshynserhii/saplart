@@ -38,7 +38,26 @@ const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === 'image/png' ||
     file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg'
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/gif' ||
+    file.mimetype === 'application/msword' ||
+    file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    file.mimetype === 'application/epub+zip' ||
+    file.mimetype === 'application/gzip' ||
+    file.mimetype === 'application/pdf' ||    
+    file.mimetype === 'application/vnd.ms-powerpoint' ||
+    file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+    file.mimetype === 'application/vnd.rar' ||    
+    file.mimetype === 'application/rtf' ||    
+    file.mimetype === 'image/svg+xml' ||    
+    file.mimetype === 'image/tiff' ||    
+    file.mimetype === 'text/plain' ||    
+    file.mimetype === 'image/webp' ||    
+    file.mimetype === 'application/vnd.ms-excel' ||    
+    file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||    
+    file.mimetype === 'application/xml' ||    
+    file.mimetype === 'application/zip' ||    
+    file.mimetype === 'application/x-7z-compressed'    
   ) {
     cb(null, true);
   } else {
@@ -49,7 +68,7 @@ const fileFilter = (req, file, cb) => {
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+  multer({ storage: fileStorage, fileFilter: fileFilter, limits: { fileSize: 10000000 } }).single('image')
 );
 app.use('/files', express.static(path.join(__dirname, 'files')));
 

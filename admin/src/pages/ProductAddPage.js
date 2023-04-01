@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Button,
+  CardMedia,
   Container,
   FormControl,
   Stack,
@@ -13,11 +14,7 @@ import {
 } from "@mui/material";
 import AutocompleteTags from "../components/tags";
 import Iconify from "../components/iconify";
-import {
-  state,
-  createDoc,
-  getDoc,
-} from "../store/reducers/documents";
+import { state, createDoc, getDoc } from "../store/reducers/documents";
 import { generateBase64FromImage } from "../utils/util/image";
 import updateDoc from "../api/document/updateDoc";
 
@@ -37,6 +34,9 @@ export default function ProductAddPage() {
   const [isDisabled, setDisabled] = useState(true);
   const [data, setData] = useState(docData);
   const [attachment, setAttachment] = useState(null);
+  const [fileFormat, setFileFormat] = useState("img");
+  const defultImagePath =
+    fileFormat === "pdf" ? "/assets/PDF-icon.png" : "/assets/Document-icon.png";
 
   useEffect(() => {
     if (id && !current) {
@@ -56,9 +56,21 @@ export default function ProductAddPage() {
       setDisabled(true);
     } else {
       setDisabled(false);
+      if (attachment?.includes("/pdf;") || attachment?.includes(".pdf")) {
+        setFileFormat("pdf");
+      } else if (
+        (attachment?.includes("application/") &&
+          !attachment?.includes("/pdf;")) ||
+        attachment?.includes(".doc") ||
+        attachment?.includes(".xls")
+      ) {
+        setFileFormat("document");
+      } else if (attachment?.includes("image/")) {
+        setFileFormat("img");
+      }
     }
   }, [attachment]);
-
+  console.log(fileFormat);
   const onUploadFileHandler = (e) => {
     const file = e.target.files[0];
     setData((data) => ({ ...data, file }));
@@ -75,7 +87,7 @@ export default function ProductAddPage() {
     setDisabled(false);
   };
 
-  const onSendFormHandler = async() => {
+  const onSendFormHandler = async () => {
     const userId = JSON.parse(localStorage.getItem("user"))._id;
     const formData = new FormData();
     formData.append("title", data.title);
@@ -92,6 +104,7 @@ export default function ProductAddPage() {
     !id ? dispatch(createDoc(formData)) : await updateDoc(id, formData);
     navigation("/dashboard/products");
   };
+  console.log(attachment);
 
   return (
     <>
@@ -171,12 +184,39 @@ export default function ProductAddPage() {
           {attachment && (
             <Box mt={2} textAlign="center">
               <div>File Preview:</div>
-              <img
+              {fileFormat === "img" ? (
+                <CardMedia
+                  sx={{
+                    objectFit: "contain",
+                    position: "inherit",
+                    zIndex: 3,
+                  }}
+                  component="img"
+                  image={attachment}
+                  // onError={(err) => console.log(err)}
+                  alt={data.title}
+                />
+              ) : (
+                <CardMedia
+                  sx={{
+                    objectFit: "contain",
+                    position: "inherit",
+                    zIndex: 3,
+                    height: 200,
+                  }}
+                  component="img"
+                  image={defultImagePath}
+                  alt={data.title}
+                />
+              )}
+
+              {/* <img
                 src={attachment}
                 alt={data.title}
+                onerror
                 height="100%"
                 loading="lazy"
-              />
+              /> */}
             </Box>
           )}
           <FormControl sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
@@ -188,8 +228,7 @@ export default function ProductAddPage() {
               Upload File
               <input
                 hidden
-                accept="image/*"
-                multiple
+                accept="image/*,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,application/vnd.ms-excel"
                 type="file"
                 onChange={onUploadFileHandler}
               />

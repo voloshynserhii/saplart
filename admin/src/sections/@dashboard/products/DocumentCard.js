@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box, Card, Link, Typography, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -14,6 +15,25 @@ const StyledProductImg = styled("img")({
 
 export default function DocumentCard({ doc, ...props }) {
   const { title, isPublished, description, path } = doc;
+  const [fileFormat, setFileFormat] = useState("img");
+  const defultImagePath =
+    fileFormat === "pdf" ? "/assets/PDF-icon.png" : "/assets/Document-icon.png";
+
+  useEffect(() => {
+    if (path.includes(".doc") || path.includes(".xls")) {
+      setFileFormat("document");
+    } else if (path.includes(".pdf")) {
+      setFileFormat("pdf");
+    } else if (
+      path.includes(".png") ||
+      path.includes(".jpg") ||
+      path.includes(".svg") ||
+      path.includes(".gif") ||
+      path.includes(".jpeg")
+    ) {
+      setFileFormat("img");
+    }
+  }, [path]);
 
   return (
     <Card style={{ cursor: "pointer" }} {...props}>
@@ -33,7 +53,15 @@ export default function DocumentCard({ doc, ...props }) {
             Published
           </Label>
         )}
-        <StyledProductImg alt={title} src={`${url}/${path}`} />
+        {fileFormat === "img" ? (
+          <StyledProductImg alt={title} src={`${url}/${path}`} />
+        ) : (
+          <StyledProductImg
+            alt={title}
+            src={defultImagePath}
+            style={{ objectFit: "contain" }}
+          />
+        )}
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>

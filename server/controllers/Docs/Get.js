@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
   try {
     const sorting = {};
     if (sortBy === "asc" || sortBy === "desc") {
-      sorting.publishedAt = sortBy === "asc" ? 1 : -1;
+      sorting.publishedAt = sortBy === "asc" ? -1 : 1;
     }
     if (sortBy === "last" || sortBy === "oldest") {
       sorting.updatedAt = sortBy === "oldest" ? 1 : -1;

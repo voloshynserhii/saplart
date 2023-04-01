@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
   const { path } = req?.file || "";
 
   if (!path) {
-    return res.status(422).json("No image provided");
+    return res.status(422).json("No file provided");
   }
   if (!userId) {
     return res.status(422).json("No user provided");
