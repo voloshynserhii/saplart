@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardMedia,
-  CardActionArea,
   Grid,
   Link,
   Stack,
@@ -16,7 +15,7 @@ interface Profile {
   name?: string;
   about?: string;
   avatarPath?: string;
-  documents?: { _id: string }[];
+  documents?: { _id: string, path?: string, title?: string, description?: string }[];
   contacts?: {
     phone?: string;
     email?: string;
@@ -142,7 +141,12 @@ export default function ProfileForm({ user, onOpenIPR }) {
           <Grid container spacing={2}>
             {documents?.map((doc) => (
               <Grid item key={doc?._id} xs={12} sm={6} md={4}>
-                <ImageCard doc={doc} onClick={() => onOpenIPR(doc?._id)} />
+                <ImageCard
+                  path={doc?.path}
+                  title={doc?.title}
+                  description={doc?.description}
+                  onClick={() => onOpenIPR(doc?._id)}
+                />
               </Grid>
             ))}
           </Grid>
