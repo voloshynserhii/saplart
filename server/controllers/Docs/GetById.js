@@ -1,10 +1,10 @@
 const Document = require("../../models/Document.model");
 
 module.exports = async (req, res, next) => {
-  const docId = req.params.docId;
-  const userId = req.query.userId;
+  const { docId } = req.params;
+  const { userId } = req.query;
 
-  const query = { _id: docId };
+  const query = { _id: typeof docId === 'string' ? docId : undefined };
   if (userId) {
     query.creator = userId;
   }

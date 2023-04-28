@@ -8,7 +8,7 @@ const getUser = async (id) => {
       return response.data
     }
   } catch (err) {
-    return err.response.data
+    return {error: err.response.data}
   }
 };
 export default getUser;

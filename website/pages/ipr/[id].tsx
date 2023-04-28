@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import {
   Box,
   Button,
+  Backdrop,
+  CircularProgress,
   Card,
   CardActionArea,
   CardContent,
@@ -33,19 +35,34 @@ import { state, setUser } from "../../store/reducers/auth";
 
 import { docs } from "../../api";
 
-export default function IPR(props) {
+interface ItemProps {
+  path: string,
+  title: string,
+  tags: string[] | [],
+  description: string,
+  rateCount: number
+}
+const defaultItem = {
+  path: '',
+  title: '',
+  tags: [],
+  description: '',
+  rateCount: 0
+}
+export default function IPR() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user } = useSelector(state);
   const [fallbackVisible, setFallbackVisible] = useState<boolean>(false);
-  const [item, setItem] = useState({});
+  const [item, setItem] = useState<ItemProps>(defaultItem);
   const [rating, setRating] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [fileFormat, setFileFormat] = useState("img");
 
-  const { id } = router.query;
+  let id: string 
+  if (router.query?.id && typeof router.query?.id === 'string') id = router.query.id;
 
-  const { path, title, tags = [], description, rateCount }: any = item;
+  const { path, title, tags = [], description, rateCount } = item;
 
   const defultImagePath =
     fileFormat === "pdf"
@@ -53,8 +70,6 @@ export default function IPR(props) {
       : fileFormat === "img"
       ? "/icons/defaultImage.png"
       : "/Document-icon.png";
-
-  const onError = () => setFallbackVisible(true);
 
   useEffect(() => {
     if (path) {
@@ -81,13 +96,15 @@ export default function IPR(props) {
       getDocData(id);
     }
   }, [id]);
-
-  const getDocData = async (id) => {
+  
+  const getDocData = async (id: string) => {
     const data = await docs.getDoc(id);
     setItem(data.doc);
     setRating(data.doc.rating);
   };
-
+  
+  const onError = () => setFallbackVisible(true);
+  
   const handleAddToFavorites = async () => {
     if (user) {
       const response = await docs.addToFavorites(id, user._id);
@@ -116,6 +133,16 @@ export default function IPR(props) {
     alert(`Updates will be sent to your email ${email}`);
   };
 
+  //if no id show spinner
+  if(!id) return (
+      <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={!id}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  )
+  
   return (
     <Container>
       <FormDialog

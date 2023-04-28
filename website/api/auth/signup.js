@@ -10,7 +10,7 @@ const signup = async (query) => {
       return response.data
     }
   } catch (err) {
-    return err.response.data
+    return {error: err.response.data}
   }
 
 };

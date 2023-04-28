@@ -54,8 +54,8 @@ export const docSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createDoc.fulfilled, (state, action) => {
-        if (action.payload.message) {
-          state.error = action.payload.message;
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
         if (action.payload.doc) {
           // state.documents = [...state.documents, action.payload.doc];
@@ -67,8 +67,8 @@ export const docSlice = createSlice({
           state.current = action.payload.doc;
           state.error = "";
         }
-        if (action.payload.message) {
-          state.error = action.payload.message;
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
       })
       .addCase(getDocs.fulfilled, (state, action) => {
@@ -77,15 +77,13 @@ export const docSlice = createSlice({
           state.totalDocs = action.payload.totalItems;
           state.error = "";
         }
-        if (!action.payload.docs && action.payload.message) {
-          state.error = action.payload.message;
-          // state.errors = action.payload.data;
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
       })
       .addCase(updateDoc.fulfilled, (state, action) => {
-        if (action.payload.message) {
-          state.error = action.payload.message;
-          // state.errors = action.payload.data;
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
         if (action.payload.doc) {
           const filteredDocs = state.documents.filter(
@@ -96,9 +94,8 @@ export const docSlice = createSlice({
         }
       })
       .addCase(deleteDoc.fulfilled, (state, action) => {
-        if (action.payload.message) {
-          state.error = action.payload.message;
-          // state.errors = action.payload.data;
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
         if (action.payload) {
           state.current = null;

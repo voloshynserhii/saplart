@@ -4,7 +4,6 @@ const initialState = {
   isAuthenticated: false,
   user: null,
   error: "",
-  errors: [],
 };
 
 export const signup = createAsyncThunk("signup", async (query) => {
@@ -44,10 +43,9 @@ export const authSlice = createSlice({
         if (action.payload.user) {
           state.user = action.payload.user;
           state.isAuthenticated = true;
-        }
-        if (action.payload.message) {
-          state.error = action.payload.message;
-          state.errors = action.payload.data;
+        } 
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
       })
       .addCase(login.fulfilled, (state, action) => {
@@ -55,9 +53,8 @@ export const authSlice = createSlice({
           state.user = action.payload.user;
           state.isAuthenticated = true;
         }
-        if (action.payload.message) {
-          state.error = action.payload.message;
-          state.errors = [{ msg: action.payload.message }];
+        if(action.payload.error) {
+          state.error = action.payload.error;
         }
       });
   },
