@@ -54,10 +54,11 @@ export default function IPR() {
   const dispatch = useDispatch();
   const { user } = useSelector(state);
   const [fallbackVisible, setFallbackVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [item, setItem] = useState<ItemProps>(defaultItem);
-  const [rating, setRating] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [fileFormat, setFileFormat] = useState("img");
+  const [rating, setRating] = useState<number>(0);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [fileFormat, setFileFormat] = useState<string>("img");
 
   let id: string 
   if (router.query?.id && typeof router.query?.id === 'string') id = router.query.id;
@@ -98,9 +99,13 @@ export default function IPR() {
   }, [id]);
   
   const getDocData = async (id: string) => {
+    setLoading(true);
     const data = await docs.getDoc(id);
-    setItem(data.doc);
-    setRating(data.doc.rating);
+    if(data.doc) {
+      setItem(data.doc);
+      setRating(data.doc.rating);
+    }
+    setLoading(false);
   };
   
   const onError = () => setFallbackVisible(true);
@@ -132,19 +137,15 @@ export default function IPR() {
     setDialogOpen(false);
     alert(`Updates will be sent to your email ${email}`);
   };
-
-  //if no id show spinner
-  if(!id) return (
-      <Backdrop
-      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={!id}
-    >
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  )
   
   return (
     <Container>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <FormDialog
         open={dialogOpen}
         onSubscribe={handleSubscribe}

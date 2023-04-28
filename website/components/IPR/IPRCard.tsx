@@ -144,7 +144,7 @@ export default function IPRCard({ item }) {
         image={`${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`}
         alt={title}
       /> */}
-      <CardContent onClick={() => alert("Show document page")}>
+      <CardContent>
         <Typography
           variant="body2"
           color="text.secondary"

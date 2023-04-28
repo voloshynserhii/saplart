@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const sessions = require('express-session');
-const cookieParser = require("cookie-parser");
+// const sessions = require('express-session');
+// const cookieParser = require("cookie-parser");
 
 require('dotenv').config(data => data.parsed);
 mongoose.set('strictQuery', false);
@@ -16,14 +16,14 @@ const tagRoutes = require('./routes/tag');
 
 const app = express();
 
-const oneDay = 1000 * 60 * 60 * 24;
-app.use(sessions({
-    secret: process.env.SECRET,
-    saveUninitialized:true,
-    cookie: { maxAge: oneDay },
-    resave: false 
-}));
-app.use(cookieParser());
+// const oneDay = 1000 * 60 * 60 * 24;
+// app.use(sessions({
+//     secret: process.env.SECRET,
+//     saveUninitialized:true,
+//     cookie: { maxAge: oneDay },
+//     resave: false 
+// }));
+// app.use(cookieParser());
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {

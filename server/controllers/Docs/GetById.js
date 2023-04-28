@@ -4,7 +4,7 @@ module.exports = async (req, res, next) => {
   const { docId } = req.params;
   const { userId } = req.query;
 
-  const query = { _id: typeof docId === 'string' ? docId : undefined };
+  const query = { _id: typeof docId === 'string' ? docId : undefined }
   if (userId) {
     query.creator = userId;
   }
@@ -23,7 +23,6 @@ module.exports = async (req, res, next) => {
       rateCount: 1,
       totalRating: 1
     })
-    .populate("history")
     .populate("creator")
     .then((doc) => {
       if (!doc) {
