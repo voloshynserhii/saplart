@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
       process.env.SECRET,
       { expiresIn: "24h" }
     );
-    req.session.userId = user._id.toString();
+    // req.session.userId = user._id.toString();
     delete user.password
     res.status(200).json({ token, user });
   } catch (err) {
