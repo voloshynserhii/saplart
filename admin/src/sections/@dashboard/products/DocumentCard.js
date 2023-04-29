@@ -15,9 +15,13 @@ const StyledProductImg = styled("img")({
 
 export default function DocumentCard({ doc, ...props }) {
   const { title, isPublished, description, path } = doc;
+  const [fallbackVisible, setFallbackVisible] = useState(false);
   const [fileFormat, setFileFormat] = useState("img");
+
   const defultImagePath =
     fileFormat === "pdf" ? "/assets/PDF-icon.png" : "/assets/Document-icon.png";
+
+  const onError = () => setFallbackVisible(true);
 
   useEffect(() => {
     if (path.includes(".doc") || path.includes(".xls")) {
@@ -39,7 +43,7 @@ export default function DocumentCard({ doc, ...props }) {
 
   return (
     <Card style={{ cursor: "pointer" }} {...props}>
-      <Box sx={{ pt: "100%", position: "relative" }}>
+      <Box sx={{ pt: "100%", position: "relative", textAlign: "center" }}>
         {!!isPublished && (
           <Label
             variant="filled"
@@ -55,14 +59,21 @@ export default function DocumentCard({ doc, ...props }) {
             Published
           </Label>
         )}
-        {fileFormat === "img" ? (
-          <StyledProductImg alt={title} src={`${url}/${path}`} />
-        ) : (
+        {fileFormat === "img" && !fallbackVisible ? (
           <StyledProductImg
             alt={title}
-            src={defultImagePath}
-            style={{ objectFit: "contain" }}
+            src={`${url}/${path}`}
+            onError={onError}
+            onLoad={() => setFallbackVisible(false)}
           />
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <StyledProductImg
+              alt={title}
+              src={defultImagePath}
+              style={{ objectFit: "contain", width: "80%" }}
+            />
+          </div>
         )}
       </Box>
 
