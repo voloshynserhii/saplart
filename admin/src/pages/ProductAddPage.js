@@ -75,6 +75,11 @@ export default function ProductAddPage() {
 
   const onUploadFileHandler = (e) => {
     const file = e.target.files[0];
+    
+    if(file.size > 50000000) {
+      return alert('File is too big!');
+    };
+    
     setData((data) => ({ ...data, file }));
 
     if (file) {
@@ -220,7 +225,7 @@ export default function ProductAddPage() {
               Upload File
               <input
                 hidden
-                accept="image/*,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,application/vnd.ms-excel"
+                accept="image/*,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,application/vnd.ms-excel,audio/*,video/*"
                 type="file"
                 onChange={onUploadFileHandler}
               />

@@ -34,31 +34,39 @@ const fileStorage = multer.diskStorage({
   }
 });
 
+const allowedFormats = [
+  'image/png',
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/svg+xml',
+  'image/tiff',
+  'image/webp',
+  'text/plain',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/epub+zip',
+  'application/gzip',
+  'application/pdf',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.rar',
+  'application/rtf',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/xml',
+  'application/zip',
+  'application/x-7z-compressed',
+  'audio/mpeg',
+  'audio/mp4',
+  'audio/vnd.wav',
+  'video/3gpp',
+  'video/mp4',
+  'video/quicktime',
+  'video/x-ms-wmv'
+]
 const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg' ||
-    file.mimetype === 'image/gif' ||
-    file.mimetype === 'application/msword' ||
-    file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-    file.mimetype === 'application/epub+zip' ||
-    file.mimetype === 'application/gzip' ||
-    file.mimetype === 'application/pdf' ||    
-    file.mimetype === 'application/vnd.ms-powerpoint' ||
-    file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
-    file.mimetype === 'application/vnd.rar' ||    
-    file.mimetype === 'application/rtf' ||    
-    file.mimetype === 'image/svg+xml' ||    
-    file.mimetype === 'image/tiff' ||    
-    file.mimetype === 'text/plain' ||    
-    file.mimetype === 'image/webp' ||    
-    file.mimetype === 'application/vnd.ms-excel' ||    
-    file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||    
-    file.mimetype === 'application/xml' ||    
-    file.mimetype === 'application/zip' ||    
-    file.mimetype === 'application/x-7z-compressed'    
-  ) {
+  if (allowedFormats.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(null, false);

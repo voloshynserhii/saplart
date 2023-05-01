@@ -114,6 +114,7 @@ export default function ProfileForm({ user, onUpdate }) {
               src={avatar || profileData?.avatarPath}
               alt={user?.name}
               height="100%"
+              accept="image/*"
               loading="lazy"
             />
           </Box>
