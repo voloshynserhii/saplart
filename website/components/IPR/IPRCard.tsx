@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import FormDialog from '../Dialog';
+import FormDialog from "../Dialog";
 import { red } from "@mui/material/colors";
 import {
   Favorite as FavoriteIcon,
@@ -61,7 +61,7 @@ export default function IPRCard({ item }) {
     updatedAt,
     rating,
     rateCount,
-    totalRating
+    totalRating,
   } = itemData || item;
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function IPRCard({ item }) {
   }, [user, _id]);
 
   const handleAddToFavorites = async () => {
-    if(user) {
+    if (user) {
       const response = await docs.addToFavorites(_id, user._id);
       if (response.user) {
         dispatch(setUser(response.user));
@@ -84,7 +84,7 @@ export default function IPRCard({ item }) {
   };
 
   const handleUpdateRating = async (val) => {
-    if(user) {
+    if (user) {
       const data = await docs.updateDoc(_id, val);
       if (data.doc) {
         setItemData(data.doc);
@@ -103,18 +103,29 @@ export default function IPRCard({ item }) {
     setDialogOpen(false);
     alert(`Updates will be sent to your email ${email}`);
   };
-  
+
   return (
     <Card sx={{ width: "100%", my: 1 }}>
-      <FormDialog open={dialogOpen} onSubscribe={handleSubscribe} onClose={() => setDialogOpen(false)} />
+      <FormDialog
+        open={dialogOpen}
+        onSubscribe={handleSubscribe}
+        onClose={() => setDialogOpen(false)}
+      />
       <CardHeader
         avatar={
           <IconButton
             aria-label="profile"
             onClick={() => router.push(`/profile/${item.creator._id}`)}
           >
-            <Avatar sx={{ bgcolor: red[500] }}>
-              {item.creator?.name?.slice(0, 1)}
+            <Avatar
+              sx={{ bgcolor: red[500] }}
+              src={
+                item.creator?.avatarPath
+                  ? `${process.env.NEXT_PUBLIC_SERVER_URL}/${item.creator?.avatarPath}`
+                  : ""
+              }
+            >
+              {item.creator?.name?.slice(0, 1)?.toUpperCase()}
             </Avatar>
           </IconButton>
         }
@@ -155,34 +166,34 @@ export default function IPRCard({ item }) {
             : description}
         </Typography>
         <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Tooltip title="Rate it!">
+            <Rating
+              name="simple-controlled"
+              value={rating / rateCount}
+              // disabled={!user}
+              precision={0.5}
+              onChange={(event, newValue) => handleUpdateRating(newValue)}
+            />
+          </Tooltip>
+          <Tooltip
+            title={`Add to Favorites. ${inFavorites?.length} user likes it`}
           >
-            <Tooltip title="Rate it!">
-              <Rating
-                name="simple-controlled"
-                value={rating / rateCount}
-                // disabled={!user}
-                precision={0.5}
-                onChange={(event, newValue) => handleUpdateRating(newValue)}
-              />
-            </Tooltip>
-            <Tooltip
-              title={`Add to Favorites. ${inFavorites?.length} user likes it`}
+            <IconButton
+              aria-label="add to favorites"
+              onClick={handleAddToFavorites}
             >
-              <IconButton
-                aria-label="add to favorites"
-                onClick={handleAddToFavorites}
-              >
-                <Badge badgeContent={inFavorites?.length || 0} color="primary">
-                  <FavoriteIcon color={favorite ? "error" : "action"} />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-          </Box>
+              <Badge badgeContent={inFavorites?.length || 0} color="primary">
+                <FavoriteIcon color={favorite ? "error" : "action"} />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+        </Box>
       </CardContent>
       {/* <CardActions disableSpacing>
         <ExpandMore

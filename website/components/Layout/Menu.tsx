@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import {
   AppBar,
+  Avatar,
   Badge,
   Box,
   IconButton,
@@ -10,7 +11,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { AccountCircle, Favorite, Login, More } from "@mui/icons-material";
+import { Favorite, Login, More } from "@mui/icons-material";
 
 export default function PrimarySearchAppBar({ user, onLogout }) {
   const router = useRouter();
@@ -38,10 +39,10 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-  
+
   const handleOpenProfile = () => {
     router.push(`/profile/${user._id}`);
-  }
+  };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -117,7 +118,14 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
           aria-haspopup="true"
           color="inherit"
         >
-          {user ? <AccountCircle /> : <Login />}
+          {user ? (
+            <Avatar
+              src={`${process.env.NEXT_PUBLIC_SERVER_URL}/${user.avatarPath}`}
+              sx={{ width: 28, height: 28 }}
+            />
+          ) : (
+            <Login />
+          )}
         </IconButton>
         <p>{user ? "Profile" : "Log In"}</p>
       </MenuItem>
@@ -182,9 +190,12 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={handleProfileMenuOpen}
-                // onClick={() => router.push(`/profile/${user._id}`)}
               >
-                <AccountCircle />
+                {/* <AccountCircle /> */}
+                <Avatar
+                  src={`${process.env.NEXT_PUBLIC_SERVER_URL}/${user.avatarPath}`}
+                  sx={{ width: 28, height: 28 }}
+                />
               </IconButton>
             ) : (
               <Typography

@@ -62,7 +62,7 @@ module.exports = async (req, res, next) => {
       .sort(sorting)
       .populate({
         path: 'creator',
-        select: {name: 1, }
+        select: {name: 1, avatarPath: 1 }
       })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
