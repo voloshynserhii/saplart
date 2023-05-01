@@ -22,6 +22,7 @@ export default function UserPage() {
 
   const handleUpdateUser = (userData) => {
     dispatch(updateUser({...userData, id: user._id}));
+    dispatch(getUser(user._id));
   };
 
   return (

@@ -5,8 +5,9 @@ const updateUser = async (id, query) => {
 
   try {
     const response = await axios.put(`${url}/auth/update/${id}`, query);
-console.log("RESPONSE", response)
+
     if (response.status === 201) {
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       return response.data
     }
   } catch (err) {

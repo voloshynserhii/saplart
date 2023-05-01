@@ -6,7 +6,6 @@ import { styled, alpha } from "@mui/material/styles";
 import {
   Box,
   Link,
-  // Button,
   Drawer,
   Typography,
   Avatar,
@@ -19,6 +18,7 @@ import Scrollbar from "../../../components/scrollbar";
 import NavSection from "../../../components/nav-section";
 import { state } from "../../../store/reducers/auth";
 import navConfig from "./config";
+import { url } from "../../../utils/consts";
 
 const NAV_WIDTH = 280;
 
@@ -65,7 +65,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={user?.avatar} alt="photoURL" />
+            <Avatar src={`${url}/${user?.avatarPath}`} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: "text.primary" }}>

@@ -1,5 +1,12 @@
 const bcrypt = require("bcryptjs");
+const fs = require("fs");
+const path = require("path");
 const User = require("../../models/User.model");
+
+const clearImage = (filePath) => {
+  filePath = path.join(__dirname, "../..", filePath);
+  fs.unlink(filePath, (err) => console.log(err));
+};
 
 module.exports = async (req, res, next) => {
   const { id } = req.params;
@@ -15,8 +22,14 @@ module.exports = async (req, res, next) => {
       return res.status(404).json("User could not be found");
     }
     if (req.file) {
+      if (req.file.path !== user.avatarPath) {
+        clearImage(user.avatarPath);
+      }
       user.avatarPath = req.file.path;
-      user.save();
+      await user.save();
+      
+      delete user.password;
+      
       return res.status(200).json({ user });
     }
 

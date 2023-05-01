@@ -12,7 +12,8 @@ import {
 import { LoadingButton } from "@mui/lab";
 import PasswordFormDialog from "./PasswordForm";
 import Iconify from "../../../components/iconify";
-import { auth } from '../../../api';
+import { auth } from "../../../api";
+import { url } from "../../../utils/consts";
 
 export default function ProfileForm({ user, onUpdate }) {
   const [profileData, setProfileData] = useState({});
@@ -20,6 +21,7 @@ export default function ProfileForm({ user, onUpdate }) {
   const [socialLinks, setSocialLinks] = useState([]);
   const [link, setLink] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const { name = "", about = "", contacts = {}, avatarPath } = user || {};
@@ -28,10 +30,14 @@ export default function ProfileForm({ user, onUpdate }) {
     const data = { name, about, contacts, avatarPath };
     if (user) {
       setProfileData(data);
+      setAvatar(`${url}/${user?.avatarPath}`);
     }
   }, [user]);
 
-  const handleUpdate = (password) => {
+  const handleUpdate = async (password) => {
+    if (avatar !== user.avatar) {
+      await auth.updateUser(user._id, file);
+    }
     const data = {
       ...profileData,
       socialLinks,
@@ -42,7 +48,7 @@ export default function ProfileForm({ user, onUpdate }) {
   };
 
   const changeFormHandler = (field, value) => {
-    setProfileData((prev) => ({ ...profileData, [field]: value }));
+    setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
   const socialLinkAddHandler = () => {
@@ -70,8 +76,8 @@ export default function ProfileForm({ user, onUpdate }) {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("image", file);
-    auth.updateUser(user._id, formData);
-    
+    setFile(formData);
+
     if (file) {
       generateBase64FromImage(file)
         .then((b64) => {
@@ -104,7 +110,12 @@ export default function ProfileForm({ user, onUpdate }) {
       >
         {avatar && (
           <Box mt={2} textAlign="center" sx={{ width: 150 }}>
-            <img src={avatar || profileData?.avatarPath} alt={user?.name} height="100%" loading="lazy" />
+            <img
+              src={avatar || profileData?.avatarPath}
+              alt={user?.name}
+              height="100%"
+              loading="lazy"
+            />
           </Box>
         )}
         <Button variant="contained" component="label">

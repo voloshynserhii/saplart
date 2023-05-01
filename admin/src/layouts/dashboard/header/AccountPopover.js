@@ -13,6 +13,7 @@ import {
   Popover,
 } from "@mui/material";
 import { state, logOut } from "../../../store/reducers/auth";
+import { url } from "../../../utils/consts";
 
 const MENU_OPTIONS = [
   {
@@ -65,7 +66,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={user.avatar} alt="photoURL" />
+        <Avatar src={`${url}/${user?.avatarPath}`} alt="photoURL" />
       </IconButton>
 
       <Popover
