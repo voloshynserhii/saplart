@@ -27,8 +27,9 @@ export default function FixedTags({ data, onChangeTags }) {
   }, [tags]);
 
   const onAddTag = async (newTag, newValue) => {
-    if (typeof newTag === "string") {
-      await addTag(newTag);
+    if (typeof newTag === "string" && !tagData.includes(newTag)) {
+      addTag(newTag);
+      setTagData(prev => [...prev, newTag]);
     }
     setTags([...newValue]);
   };
