@@ -118,7 +118,7 @@ export default function ProfileForm({ user, onOpenIPR }) {
       <Grid item xs={12} sm={6} md={9}>
         <Card
           sx={{
-            p: 10,
+            p: { xs: 1, md: 10 },
             boxShadow: 3,
             textAlign: "center",
           }}

@@ -52,10 +52,21 @@ export default function Profile() {
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "end",
                 alignItems: "center",
               }}
-            ></Box>
+            >
+              <Button
+                variant="contained"
+                onClick={() =>
+                  router.push(
+                    `${process.env.NEXT_PUBLIC_ADMIN_URL}/dashboard/user`
+                  )
+                }
+              >
+                Edit
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       </Grid>

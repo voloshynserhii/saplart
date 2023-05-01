@@ -1,29 +1,49 @@
 import { Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Stack, Popover, MenuItem, Container, Typography } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Stack,
+  Popover,
+  MenuItem,
+  Container,
+  Typography,
+} from "@mui/material";
 
 import Iconify from "../components/iconify";
 import { ProfileForm } from "../sections/auth/profile";
 import { state, updateUser, getUser } from "../store/reducers/auth";
 
 export default function UserPage() {
+  const { id: userId } = useParams();
   const [open, setOpen] = useState(null);
   const { user } = useSelector(state);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
-    if(user?._id) dispatch(getUser(user._id))
-  }, []);
-  
+    if (user?._id || userId) dispatch(getUser(user?._id || userId));
+  }, [user?._id, userId]);
+
   const handleCloseMenu = () => {
     setOpen(null);
   };
 
   const handleUpdateUser = (userData) => {
-    dispatch(updateUser({...userData, id: user._id}));
+    dispatch(updateUser({ ...userData, id: user._id }));
     dispatch(getUser(user._id));
   };
+
+  if (!user)
+    return (
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
 
   return (
     <>
@@ -42,7 +62,10 @@ export default function UserPage() {
             Profile
           </Typography>
         </Stack>
-        <ProfileForm user={user} onUpdate={(userData) => handleUpdateUser(userData)} />
+        <ProfileForm
+          user={user}
+          onUpdate={(userData) => handleUpdateUser(userData)}
+        />
       </Container>
 
       <Popover

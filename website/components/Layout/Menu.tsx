@@ -42,6 +42,7 @@ export default function PrimarySearchAppBar({ user, onLogout }) {
 
   const handleOpenProfile = () => {
     router.push(`/profile/${user._id}`);
+    handleMenuClose();
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
