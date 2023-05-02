@@ -64,8 +64,9 @@ module.exports = async (req, res, next) => {
         path: 'creator',
         select: {name: 1, avatarPath: 1 }
       })
-      .skip((currentPage - 1) * perPage)
-      .limit(perPage);
+      .lean()
+      // .skip((currentPage - 1) * perPage)
+      // .limit(perPage);
 
     return res.status(200).json({
       docs,

@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
       rateCount: 1,
       totalRating: 1
     })
-    .populate("creator")
+    .populate({ path: 'creator', select: { password: 0 }})
     .then((doc) => {
       if (!doc) {
         return res.status(422).json("Document not found");

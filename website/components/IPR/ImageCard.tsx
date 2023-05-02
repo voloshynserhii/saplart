@@ -17,7 +17,7 @@ const ImageCard = ({ path, title = '', description, ...props }) => {
       ? "/PDF-icon.png"
       : fileFormat === "img"
       ? "/icons/defaultImage.png"
-      : "/Document-icon.png";
+      : "/Doc-icon.png";
 
   useEffect(() => {
     if (path) {
