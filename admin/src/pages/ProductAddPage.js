@@ -77,7 +77,7 @@ export default function ProductAddPage() {
     const file = e.target.files[0];
     
     if(file.size > 50000000) {
-      return alert('File is too big!');
+      return alert('File is too big! Should be max 50MB');
     };
     
     setData((data) => ({ ...data, file }));

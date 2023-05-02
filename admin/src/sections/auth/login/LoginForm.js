@@ -18,11 +18,32 @@ export default function LoginForm(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState({});
 
+  const emailRegexp =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  
   const handleClick = async () => {
+    let hasError = false;
+    const validEmail = emailRegexp.test(email);
+    if (!validEmail || !email.includes(".")) {
+      setError((err) => ({ ...err, email: "Provide valid email" }));
+      hasError = true;
+    }
+    if (password.length < 4) {
+      setError((err) => ({
+        ...err,
+        password: "Password must be at least 4 characters",
+      }));
+      hasError = true;
+    }
+
+    if (hasError) return;
+    
     props.onLoading(true);
     await dispatch(login({ email, password }));
     props.onLoading(false);
+    setError({});
   };
 
   return (
@@ -32,6 +53,8 @@ export default function LoginForm(props) {
           name="email"
           label="Email address"
           value={email}
+          error={!!error?.email}
+          helperText={error?.email}
           onChange={(event) => setEmail(event.currentTarget.value)}
         />
 
@@ -39,6 +62,8 @@ export default function LoginForm(props) {
           name="password"
           label="Password"
           type={showPassword ? "text" : "password"}
+          error={!!error?.password}
+          helperText={error?.password}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -63,13 +88,13 @@ export default function LoginForm(props) {
         justifyContent="space-between"
         sx={{ my: 2 }}
       >
-        <div>
+        {/* <div>
           <Checkbox name="remember" label="Remember me" />
           <span>Remember me</span>
-        </div>
-        <Link variant="subtitle2" underline="hover">
+        </div> */}
+        {/* <Link variant="subtitle2" underline="hover">
           Forgot password?
-        </Link>
+        </Link> */}
       </Stack>
 
       <LoadingButton

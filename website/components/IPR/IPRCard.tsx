@@ -7,6 +7,7 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   Card,
   CardHeader,
   CardMedia,
@@ -131,9 +132,12 @@ export default function IPRCard({ item }) {
         }
         action={
           <>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
+            <Button
+              variant="outlined"
+              onClick={() => router.push(`/ipr/${_id}`)}
+            >
+              View
+            </Button>
           </>
         }
         // title={title}
@@ -160,6 +164,7 @@ export default function IPRCard({ item }) {
           variant="body2"
           color="text.secondary"
           sx={{ minHeight: "20px" }}
+          onClick={() => router.push(`/ipr/${_id}`)}
         >
           {description?.length > 40
             ? `${description.slice(0, 40)}...`

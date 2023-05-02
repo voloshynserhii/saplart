@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { KeyboardBackspace as KeyboardBackspaceIcon } from "@mui/icons-material";
 import ProfileForm from "../../components/Profile";
 import { auth } from "../../api";
+import { state } from "../../store/reducers/auth";
 
 type Router = {
   id?: string;
@@ -17,6 +19,7 @@ interface Profile {
 
 export default function Profile() {
   const router = useRouter();
+  const { user } = useSelector(state);
   const { id }: Router = router.query;
   const [profileData, setProfileData] = useState<Profile>({});
 
@@ -56,16 +59,18 @@ export default function Profile() {
                 alignItems: "center",
               }}
             >
-              <Button
-                variant="contained"
-                onClick={() =>
-                  router.push(
-                    `${process.env.NEXT_PUBLIC_ADMIN_URL}/dashboard/user`
-                  )
-                }
-              >
-                Edit
-              </Button>
+              {user?._id === id && (
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    router.push(
+                      `${process.env.NEXT_PUBLIC_ADMIN_URL}/dashboard/user`
+                    )
+                  }
+                >
+                  Edit
+                </Button>
+              )}
             </Box>
           </Grid>
         </Grid>

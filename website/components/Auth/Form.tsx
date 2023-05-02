@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 import {
   Alert,
   Backdrop,
@@ -15,14 +16,19 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { state, login, signup } from "../../store/reducers/auth";
 
+interface ErrorProps {
+  email?: string;
+  password?: string;
+}
+
 export default function Form({ logIn }) {
   const { error: authError } = useSelector(state);
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState({});
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<ErrorProps>({});
 
   const emailRegexp =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -51,10 +57,10 @@ export default function Form({ logIn }) {
     }
 
     if (hasError) return;
-
-    logIn
-      ? dispatch(login({ email, password }))
-      : dispatch(signup({ email, password }));
+    
+    // @ts-ignore
+    logIn ? dispatch(login({ email, password })) : dispatch(signup({ email, password }));
+    
     setLoading(true);
   };
 
