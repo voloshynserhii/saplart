@@ -28,6 +28,7 @@ module.exports = async (req, res, next) => {
       user.avatarPath = req.file.path;
       await user.save();
       
+      user.password = undefined
       delete user.password;
       
       return res.status(200).json({ user });
@@ -47,8 +48,9 @@ module.exports = async (req, res, next) => {
         user.contacts = contacts
       }
     }
-    user.save();
+    await user.save();
     
+    user.password = undefined
     delete user.password;
     
     return res.status(200).json({ user });

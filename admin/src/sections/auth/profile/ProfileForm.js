@@ -35,7 +35,7 @@ export default function ProfileForm({ user, onUpdate }) {
   }, [user]);
 
   const handleUpdate = async (password) => {
-    if (avatar !== user.avatar) {
+    if (!avatar.includes(user.avatarPath)) {
       await auth.updateUser(user._id, file);
     }
     const data = {

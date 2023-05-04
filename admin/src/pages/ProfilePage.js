@@ -14,7 +14,8 @@ import {
 
 import Iconify from "../components/iconify";
 import { ProfileForm } from "../sections/auth/profile";
-import { state, updateUser, getUser } from "../store/reducers/auth";
+import { auth } from "../api";
+import { state, getUser } from "../store/reducers/auth";
 
 export default function UserPage() {
   const { id: userId } = useParams();
@@ -30,9 +31,8 @@ export default function UserPage() {
     setOpen(null);
   };
 
-  const handleUpdateUser = (userData) => {
-    dispatch(updateUser({ ...userData, id: user._id }));
-    dispatch(getUser(user._id));
+  const handleUpdateUser = async (userData) => {
+    await auth.updateUser(user?._id, userData).then(() => dispatch(getUser(user?._id)));
   };
 
   if (!user)

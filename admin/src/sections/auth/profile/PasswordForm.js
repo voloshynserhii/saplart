@@ -62,7 +62,7 @@ export default function FormDialog({ open, onClose, onUpdateProfile }) {
 
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={agreeHandler} autoFocus>
+          <Button disabled={!password || password?.length < 4} onClick={agreeHandler}>
             Update
           </Button>
         </DialogActions>

@@ -19,7 +19,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     dispatch(getDocs());
-  }, [dispatch]);
+  }, []);
 
   const registerNewDocHandler = () => {
     navigation("/dashboard/product/new");
