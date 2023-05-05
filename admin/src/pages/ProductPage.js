@@ -77,7 +77,7 @@ export default function ProductPage() {
           <Grid item sm={12} mb={2}>
             <Typography variant="h4">IP Rights</Typography>
           </Grid>
-          <Grid item sm={12} container>
+          <Grid item sm={12}>
             <Grid item md={6}>
               <Button
                 variant="outlined"
@@ -90,7 +90,7 @@ export default function ProductPage() {
             {user._id === current.creator._id && (
               <Grid item md={6} align="right">
                 <Button
-                  sx={{ mr: 1 }}
+                  sx={{ mr: 1, width: 120 }}
                   variant="contained"
                   startIcon={<Iconify icon="ant-design:send-outlined" />}
                   onClick={() => setPublishDialogOpen(true)}
@@ -98,7 +98,7 @@ export default function ProductPage() {
                   {current.isPublished ? "Unpublish" : "Publish"}
                 </Button>
                 <Button
-                  sx={{ mr: 1 }}
+                  sx={{ mr: 1, width: 120 }}
                   variant="contained"
                   startIcon={
                     <Iconify icon="ant-design:safety-certificate-outlined" />
@@ -107,6 +107,7 @@ export default function ProductPage() {
                   Protect
                 </Button>
                 <Button
+                  sx={{ width: 120 }}
                   variant="contained"
                   startIcon={
                     <Iconify icon="ant-design:cloud-download-outlined" />
@@ -117,6 +118,36 @@ export default function ProductPage() {
               </Grid>
             )}
           </Grid>
+          {user._id === current.creator._id && (
+            <Grid item md={12} align="right" sx={{mt: 2}}>
+              <Button
+                sx={{ mr: 1, width: 120 }}
+                variant="contained"
+                startIcon={<Iconify icon="ant-design:send-outlined" />}
+                onClick={() => setPublishDialogOpen(true)}
+              >
+                ANALOGS
+              </Button>
+              <Button
+                sx={{ mr: 1, width: 120 }}
+                variant="contained"
+                startIcon={
+                  <Iconify icon="ant-design:safety-certificate-outlined" />
+                }
+              >
+                NFT
+              </Button>
+              <Button
+              sx={{ width: 120 }}
+                variant="contained"
+                startIcon={
+                  <Iconify icon="ant-design:cloud-download-outlined" />
+                }
+              >
+                SALE
+              </Button>
+            </Grid>
+          )}
         </Grid>
 
         <Grid container spacing={3}>
@@ -155,13 +186,15 @@ export default function ProductPage() {
                 </TableBody>
               </Table>
             </TableContainer>
-            {current.isPublished && <Rating
-              sx={{ mt: 2 }}
-              name="simple-controlled"
-              precision={0.2}
-              value={current?.totalRating || 0}
-              disabled
-            />}
+            {current.isPublished && (
+              <Rating
+                sx={{ mt: 2 }}
+                name="simple-controlled"
+                precision={0.2}
+                value={current?.totalRating || 0}
+                disabled
+              />
+            )}
           </Grid>
         </Grid>
 

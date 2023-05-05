@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const createDoc = createAsyncThunk("createDoc", async (query) => {
-  return doc.createDoc(query);
+  return await doc.createDoc(query);
 });
 
 export const getDoc = createAsyncThunk("getDoc", async (query) => {
@@ -56,7 +56,7 @@ export const docSlice = createSlice({
           state.error = action.payload.message;
         }
         if (action.payload.doc) {
-          // state.documents = [...state.documents, action.payload.doc];
+          state.documents = [...state.documents, action.payload.doc];
           state.error = "";
         }
       })
