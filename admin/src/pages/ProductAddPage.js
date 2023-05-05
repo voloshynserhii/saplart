@@ -75,11 +75,11 @@ export default function ProductAddPage() {
 
   const onUploadFileHandler = (e) => {
     const file = e.target.files[0];
-    
-    if(file.size > 50000000) {
-      return alert('File is too big! Should be max 50MB');
-    };
-    
+
+    if (file.size > 50000000) {
+      return alert("File is too big! Should be max 50MB");
+    }
+
     setData((data) => ({ ...data, file }));
 
     if (file) {
@@ -108,8 +108,13 @@ export default function ProductAddPage() {
     }
     formData.append("userId", userId);
 
-    !id ? dispatch(createDoc(formData)) : await updateDoc(id, formData);
-    navigation("/dashboard/products");
+    !id
+      ? dispatch(createDoc(formData)).then(() =>
+          navigation("/dashboard/products")
+        )
+      : await updateDoc(id, formData).then(() =>
+          navigation("/dashboard/products")
+        );
   };
 
   return (

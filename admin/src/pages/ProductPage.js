@@ -87,7 +87,7 @@ export default function ProductPage() {
                 Back
               </Button>
             </Grid>
-            {user._id === current.creator._id && (
+            {/* {user._id === current.creator._id && ( */}
               <Grid item md={6} align="right">
                 <Button
                   sx={{ mr: 1, width: 120 }}
@@ -116,9 +116,9 @@ export default function ProductPage() {
                   Certify
                 </Button>
               </Grid>
-            )}
+            {/* )} */}
           </Grid>
-          {user._id === current.creator._id && (
+          {/* {user._id === current.creator._id && ( */}
             <Grid item md={12} align="right" sx={{mt: 2}}>
               <Button
                 sx={{ mr: 1, width: 120 }}
@@ -147,7 +147,7 @@ export default function ProductPage() {
                 SALE
               </Button>
             </Grid>
-          )}
+          {/* )} */}
         </Grid>
 
         <Grid container spacing={3}>
