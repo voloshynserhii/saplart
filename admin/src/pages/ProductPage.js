@@ -124,7 +124,6 @@ export default function ProductPage() {
                 sx={{ mr: 1, width: 120 }}
                 variant="contained"
                 startIcon={<Iconify icon="ant-design:send-outlined" />}
-                onClick={() => setPublishDialogOpen(true)}
               >
                 ANALOGS
               </Button>
@@ -138,7 +137,7 @@ export default function ProductPage() {
                 NFT
               </Button>
               <Button
-              sx={{ width: 120 }}
+                sx={{ width: 120 }}
                 variant="contained"
                 startIcon={
                   <Iconify icon="ant-design:cloud-download-outlined" />

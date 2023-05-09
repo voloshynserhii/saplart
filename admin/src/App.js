@@ -15,14 +15,13 @@ export default function App() {
   const authError = useSelector(state)?.error;
   const docError = useSelector(docState).error;
   const [hasErrors, setHasErrors] = useState("");
-
+  const user = localStorage.getItem("user");
+  
   useEffect(() => {
-    const user = localStorage.getItem("user");
-
     if (!!user) {
       dispatch(setUser(JSON.parse(user)));
     }
-  }, [dispatch]);
+  }, [user]);
 
   useEffect(() => {
     if (!!authError) setHasErrors("auth");
